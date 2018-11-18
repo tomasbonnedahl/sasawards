@@ -1,23 +1,36 @@
+import json
 from collections import namedtuple
-
-from datetime import datetime, timedelta
+from datetime import timedelta, datetime
 from random import random
 from time import sleep
 
 import requests
 
-from conf import MIN_DATE, MAX_DATE, DAYS_AHEAD, DESTINATIONS, BASE_URL
 
 LegData = namedtuple('LegData', 'origin destination date business_seats')
 
 
-def get_bus_seats_from_dict(d):
+def do_single_request(base_url, origin, destination, out_date):
+    # Responsible to map params to what the actual API is called
+    r = requests.get(base_url + 'from={origin}&to={dst}&outDate={out_date}'.format(  # TODO: dict and unpack
+        origin=origin,
+        dst=destination,
+        out_date=out_date.strftime("%Y%m%d")
+    ))
+    if not r.ok:
+        print('Not ok for {}-{}@{}, status code: {}'.format(origin, destination, out_date, r.status_code))
+        return
+    return r.json()
+
+
+def get_result_from_response(response):
     """
+    :type response: dict
     :rtype: LegData|None
     """
     try:
-        if 'outboundFlights' in d:
-            outbound = d['outboundFlights']
+        if 'outboundFlights' in response:
+            outbound = response['outboundFlights']
             for fx in outbound:
                 if 'isSoldOut' in fx:  # TODO: Check value is True also
                     continue
@@ -44,49 +57,38 @@ def get_bus_seats_from_dict(d):
                                                                date=date_t.date())
     except Exception as e:
         print('Exception caught: {}'.format(e))
-        print(json.dumps(d))
-
+        print(json.dumps(response))
     return None
 
 
-def get_stuff():
-    # TODO: Separate code that reads config and sends a namedtuple to something?
-    min_date = datetime.strptime(MIN_DATE, "%Y%m%d").date()
-    if MAX_DATE is not None:
-        max_date = datetime.strptime(MAX_DATE, "%Y%m%d").date()
-    else:
-        max_date = datetime.now().date() + timedelta(days=DAYS_AHEAD)
-
-    delta = max_date - min_date
-
-    data_dicts = []
-    for dst in DESTINATIONS:
+def get_flight_info(config):
+    delta = config.max_date - config.min_date
+    results = []
+    for dst in config.destinations:
         for day in range(delta.days + 1):
-            out_date = min_date + timedelta(day)
-            r = requests.get(BASE_URL + 'from=CPH&to={dst}&outDate={out_date}'.format(  # TODO: dict and unpack
-                dst=dst,
-                out_date=out_date.strftime("%Y%m%d")
-            ))
+            out_date = config.min_date + timedelta(day)
+            response = do_single_request(config.base_url, origin='CPH', destination=dst, out_date=out_date)
+            if response:
+                result = get_result_from_response(response)
+                results.append(result)
 
             sleep(1 + round(random(), 2))
+    return results
 
-            if not r.ok:
-                print('Not ok for {} {}, status code: {}'.format(dst, out_date, r.status_code))
-                continue
 
-            data_dicts.append(get_bus_seats_from_dict(r.json()))
+def handle_flight_response(flight_info):
+    """
+    :type flight_info: list[LegData]
+    """
+    # That is the interface to the rest of the application + the database
+    # a) checking what is in the database,
+    # b) updating the database,
+    # c) e-mailing the positive changes
+    print('Got flight info')
+    for each in flight_info:
+        print(each)
 
-    return data_dicts
 
-d = get_stuff()
-for each in d:
-    print(each)
-
-# This class is the scheduled, which will be a worker at some point
-# It's given a configuration from the scheduling task with dates and destinations
-# It will call on something with a list of defined objects containing the data
-# That is the interface to the rest of the application + the database
-# That callee will be responsible for
-# a) checking what is in the database,
-# b) updating the database,
-# c) e-mailing the positive changes
+def xxx(config):
+    flight_info = get_flight_info(config)
+    handle_flight_response(flight_info)
