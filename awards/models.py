@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 
 class Dummy(models.Model):
@@ -16,7 +17,7 @@ class Flight(models.Model):
     business_seats = models.IntegerField(default=0)
     origin = models.CharField(max_length=30)
     destination = models.CharField(max_length=30)
-    date = models.DateField()
+    date = models.DateField(default=datetime.date.today)
 
 
 class Changes(models.Model):
