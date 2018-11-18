@@ -6,6 +6,8 @@ from time import sleep
 
 import requests
 
+from awards.models import Flight, Changes
+
 
 LegData = namedtuple('LegData', 'origin destination date business_seats')
 
@@ -96,9 +98,6 @@ def handle_flight_response(flight_info):
     # a) checking what is in the database,
     # b) updating the database,
     # c) e-mailing the positive changes
-
-    # TODO: Why does they have to be imported here instead of in the top?
-    from awards.models import Flight, Changes
 
     print('Got flight info')
     for updated_flight in flight_info:
