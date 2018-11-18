@@ -1,5 +1,13 @@
 from collections import namedtuple
 
+from datetime import datetime, timedelta
+from random import random
+from time import sleep
+
+import requests
+
+from conf import MIN_DATE, MAX_DATE, DAYS_AHEAD, DESTINATIONS, BASE_URL
+
 LegData = namedtuple('LegData', 'origin destination date business_seats')
 
 
