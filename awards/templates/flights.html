@@ -6,7 +6,14 @@
 <body>
 Show flights
 {% for flight in flights %}
-    <li>{{ flight.origin }}-{{ flight.destination }}: {{ flight.business_seats }} ({{ flight.ts }})</li>
+    <li>{{ flight.date }} {{ flight.origin }}-{{ flight.destination }}: {{ flight.business_seats }} ({{ flight.ts }})
+    </li>
+{% endfor %}
+<br>
+{% for change in changes %}
+    <li>From {{ change.prev_business_seats }} to {{ change.to.business_seats }}
+        on {{ change.to.origin }}-{{ change.to.destination }} ({{ change.ts }})
+    </li>
 {% endfor %}
 
 </body>

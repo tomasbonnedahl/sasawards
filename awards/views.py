@@ -19,7 +19,7 @@ def show_seats_and_changes(request):
                     destination='SFO')
     flight.save()
     flights = Flight.objects.all()
-    return render(request, "flights.html", {"flights": flights})
+    return render(request, "flights.html", {"changes": flights})
 
 
 def mock(request):

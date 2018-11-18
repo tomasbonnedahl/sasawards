@@ -6,7 +6,7 @@ from time import sleep
 
 import requests
 
-from awards.models import Flight
+from awards.models import Flight, Changes
 
 LegData = namedtuple('LegData', 'origin destination date business_seats')
 
@@ -73,6 +73,7 @@ class ResponseParser(object):
                                    destination=outbound[flight_id]['destination']['code'],
                                    date=date_t.date())
 
+
 def get_flight_info(config):
     delta = config.max_date - config.min_date
     results = []
@@ -100,7 +101,24 @@ def handle_flight_response(flight_info):
     for updated_flight in flight_info:
         print(updated_flight)
         existing = Flight.objects.filter(origin=updated_flight.origin,
-                                         destination=updated_flight.destination)  # TODO: Add date
+                                         destination=updated_flight.destination,
+                                         date=updated_flight.date)
+        if existing:
+            existing_flight = existing.first()  # Should only be one
+            if updated_flight.business_seats > existing_flight.business_seats:
+                Changes.objects.create(prev_business_seats=existing_flight.business_seats,
+                                       to=existing_flight)
+
+            existing_flight.update(business_seats=updated_flight.business_seats)
+        else:
+            # get_or_create?
+            new_flight = Flight.objects.create(origin=updated_flight.origin,
+                                               destination=updated_flight.destination,
+                                               date=updated_flight.date,
+                                               business_seats=updated_flight.business_seats)
+
+            Changes.objects.create(prev_business_seats=0,
+                                   to=new_flight)
 
 
 def xxx(config):
