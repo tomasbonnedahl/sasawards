@@ -23,44 +23,6 @@ def do_single_request(base_url, origin, destination, out_date):
     return r.json()
 
 
-def get_result_from_response(response):
-    """
-    :type response: dict
-    :rtype: LegData|None
-    """
-    try:
-        if 'outboundFlights' in response:
-            outbound = response['outboundFlights']
-            for fx in outbound:
-                if 'isSoldOut' in fx:  # TODO: Check value is True also
-                    continue
-
-                cabins = outbound[fx]['cabins']
-                if outbound[fx]['stops'] == 0:
-                    if 'BUSINESS' in cabins:
-                        if 'SAS BUSINESS' in cabins['BUSINESS']:
-                            sas_bus = cabins['BUSINESS']['SAS BUSINESS']
-                            if 'products' in sas_bus:
-                                if 'O_2' in sas_bus['products']:
-                                    O2 = sas_bus['products']['O_2']
-                                    if 'fares' in O2:
-                                        for fare in O2['fares']:
-                                            if 'avlSeats' in fare:
-                                                seats = fare['avlSeats']
-                                                a_date = outbound[fx]['startTimeInLocal']
-                                                stripped_date = a_date.split('+')[0]
-                                                date_t = datetime.strptime(stripped_date, "%Y-%m-%dT%H:%M:%S.%f")
-
-                                                return LegData(business_seats=seats,
-                                                               origin=outbound[fx]['origin']['code'],
-                                                               destination=outbound[fx]['destination']['code'],
-                                                               date=date_t.date())
-    except Exception as e:
-        print('Exception caught: {}'.format(e))
-        print(json.dumps(response))
-    return None
-
-
 class ResponseParser(object):
     def __init__(self, response):
         """
@@ -69,6 +31,14 @@ class ResponseParser(object):
         self.response = response
 
     def parse(self):
+        try:
+            return self.__parse()
+        except Exception as e:
+            print('Exception caught: {}'.format(e))
+            print(json.dumps(self.response))
+        return None
+
+    def __parse(self):
         if 'pricingType' in self.response and self.response['pricingType'] == 'O':
             # Paid flights only?
             return None
@@ -110,7 +80,7 @@ def get_flight_info(config):
             out_date = config.min_date + timedelta(day)
             response = do_single_request(config.base_url, origin='CPH', destination=dst, out_date=out_date)
             if response:
-                result = get_result_from_response(response)
+                result = ResponseParser(response).parse()
                 results.append(result)
 
             sleep(1 + round(random(), 2))

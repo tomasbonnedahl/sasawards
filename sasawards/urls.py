@@ -20,6 +20,7 @@ import awards.views
 
 urlpatterns = [
     path("", awards.views.index, name="index"),
+    path("flights/", awards.views.show_seats_and_changes, name="show_seats_and_changes"),
     path("mock/", awards.views.mock, name="mock"),
     path('admin/', admin.site.urls),
 ]

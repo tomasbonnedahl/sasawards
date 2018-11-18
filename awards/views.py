@@ -1,6 +1,7 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 
-from awards.models import Dummy2
+from awards.models import Dummy2, Flight
 from sas_api.mock_data import get_response
 
 
@@ -10,6 +11,11 @@ def index(request):
     val = Dummy2.objects.all().count()
 
     return HttpResponse('Hello: {}'.format(val))
+
+
+def show_seats_and_changes(request):
+    data = Flight.objects.all()
+    render(request, "flights.html", {"data": data})
 
 
 def mock(request):
