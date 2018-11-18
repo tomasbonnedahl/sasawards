@@ -1,0 +1,11 @@
+- Add 2 new output files to dummy and make sure they work
+- Write proper test cases
+- Refactor the getting of data
+- Create new project
+- Set up a database
+- Proper background job
+- Add a frontend
+    - Possible to update the configuration
+    - See timestamps
+    - See available flights
+    - Do trend analysis on when seats are released
