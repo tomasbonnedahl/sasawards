@@ -1,0 +1,1 @@
+web: gunicorn sasawards.wsgi --log-file -
