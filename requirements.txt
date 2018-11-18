@@ -3,3 +3,5 @@ gunicorn
 django-heroku
 requests
 APScheduler==3.0.0
+dj-database-url
+psycopg2
