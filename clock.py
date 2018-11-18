@@ -8,7 +8,7 @@ sched = BlockingScheduler()
 @sched.scheduled_job('interval', minutes=2)  # TODO: Temp
 def timed_job():
     print('This job is run every fifteen minutes.')
-    fetch_flights()
+    # fetch_flights()
 
 
 @sched.scheduled_job('interval', minutes=10)
