@@ -14,8 +14,12 @@ def index(request):
 
 
 def show_seats_and_changes(request):
-    data = Flight.objects.all()
-    render(request, "flights.html", {"data": data})
+    flight = Flight(business_seats=2,
+                    origin='ARN',
+                    destination='SFO')
+    flight.save()
+    flights = Flight.objects.all()
+    return render(request, "flights.html", {"flights": flights})
 
 
 def mock(request):
