@@ -16,6 +16,7 @@ class Flight(models.Model):
     business_seats = models.IntegerField(default=0)
     origin = models.CharField(max_length=30)
     destination = models.CharField(max_length=30)
+    date = models.DateField()
 
 
 class Changes(models.Model):

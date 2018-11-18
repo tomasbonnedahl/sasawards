@@ -6,6 +6,7 @@ from time import sleep
 
 import requests
 
+from awards.models import Flight
 
 LegData = namedtuple('LegData', 'origin destination date business_seats')
 
@@ -96,8 +97,10 @@ def handle_flight_response(flight_info):
     # b) updating the database,
     # c) e-mailing the positive changes
     print('Got flight info')
-    for each in flight_info:
-        print(each)
+    for updated_flight in flight_info:
+        print(updated_flight)
+        existing = Flight.objects.filter(origin=updated_flight.origin,
+                                         destination=updated_flight.destination)  # TODO: Add date
 
 
 def xxx(config):

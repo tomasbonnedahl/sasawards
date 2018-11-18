@@ -20,3 +20,4 @@ def create_config():
 def fetch_flights():
     config = create_config()
     xxx(config)
+    # TODO: SasRequestGetter(base_url).request(from, to, date) - returns Python dict
