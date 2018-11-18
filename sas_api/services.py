@@ -2,7 +2,7 @@ from collections import namedtuple
 from datetime import datetime, timedelta
 
 from conf import MAX_DATE, DAYS_AHEAD, MIN_DATE, DESTINATIONS, BASE_URL
-# from sas_api.flight_getter import xxx
+from sas_api.flight_getter import xxx
 
 Config = namedtuple('Config', 'base_url min_date max_date destinations')
 
@@ -19,5 +19,5 @@ def create_config():
 
 def fetch_flights():
     config = create_config()
-    # xxx(config)
+    xxx(config)
     # TODO: SasRequestGetter(base_url).request(from, to, date) - returns Python dict
