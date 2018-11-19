@@ -22,6 +22,10 @@ def timed_job():
     print('This job is run every fifteen minutes.')
     # from sas_api.services import fetch_flights
     # fetch_flights()
+
+    # Add as mgmt command
+    # Use RQ (but does it have access to the Django env/db?)
+    # Run it inside the web (bad...?)
     print('flights: {}'.format(Flight.objects.all()))
 
 
