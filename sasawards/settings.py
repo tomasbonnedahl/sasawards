@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = '@7bq*xy%z2mdwhdc_i_alxpb-iv79%(xkxyg3q(%)ek3*48nsk'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -72,12 +70,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sasawards.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
+
     DATABASES = {'default': dj_database_url.config()}
 else:
     DATABASES = {
@@ -87,34 +85,59 @@ else:
         }
     }
 
+if 'DATABASE_URL' in os.environ:
+    # Hack
+    RQ_QUEUES = {
+        'default': {
+            'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
+            'DEFAULT_TIMEOUT': 500,
+        },
+    }
+else:
+    print('***** Local')
+    RQ_QUEUES = {
+        'default': {
+            'HOST': 'localhost',
+            'PORT': 6379,
+            'DB': 0,
+            'PASSWORD': 'tomas',
+            'DEFAULT_TIMEOUT': 360,
+        },
+
+    }
 
 # RQ_SHOW_ADMIN_LINK=False
 
-RQ_QUEUES = {
-    'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-        'PASSWORD': 'tomas',
-        'DEFAULT_TIMEOUT': 360,
-    },
-    # 'with-sentinel': {
-    #    'SENTINELS': [('localhost', 26736), ('localhost', 26737)],
-    #    'MASTER_NAME': 'redismaster',
-    #    'DB': 0,
-    #    'PASSWORD': 'secret',
-    #    'SOCKET_TIMEOUT': None,
-    # },
-    # 'high': {
-    #     'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'), # If you're on Heroku
-    #     'DEFAULT_TIMEOUT': 500,
-    # },
-    # 'low': {
-    #     'HOST': 'localhost',
-    #     'PORT': 6379,
-    #     'DB': 0,
-    # }
-}
+# RQ_QUEUES = {
+#     # 'default': {
+#     #     'HOST': 'localhost',
+#     #     'PORT': 6379,
+#     #     'DB': 0,
+#     #     'PASSWORD': 'tomas',
+#     #     'DEFAULT_TIMEOUT': 360,
+#     # },
+#     'default': {
+#         'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'), # If you're on Heroku
+#         'DEFAULT_TIMEOUT': 500,
+#     },
+#
+#     # 'with-sentinel': {
+#     #    'SENTINELS': [('localhost', 26736), ('localhost', 26737)],
+#     #    'MASTER_NAME': 'redismaster',
+#     #    'DB': 0,
+#     #    'PASSWORD': 'secret',
+#     #    'SOCKET_TIMEOUT': None,
+#     # },
+#     # 'high': {
+#     #     'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'), # If you're on Heroku
+#     #     'DEFAULT_TIMEOUT': 500,
+#     # },
+#     # 'low': {
+#     #     'HOST': 'localhost',
+#     #     'PORT': 6379,
+#     #     'DB': 0,
+#     # }
+# }
 
 
 # Password validation
@@ -135,7 +158,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -148,7 +170,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
