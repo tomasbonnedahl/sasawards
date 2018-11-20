@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'awards'
+    'awards',
+    'django_rq'
 ]
 
 MIDDLEWARE = [
@@ -85,6 +86,35 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
+
+
+# RQ_SHOW_ADMIN_LINK=False
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'PASSWORD': 'tomas',
+        'DEFAULT_TIMEOUT': 360,
+    },
+    # 'with-sentinel': {
+    #    'SENTINELS': [('localhost', 26736), ('localhost', 26737)],
+    #    'MASTER_NAME': 'redismaster',
+    #    'DB': 0,
+    #    'PASSWORD': 'secret',
+    #    'SOCKET_TIMEOUT': None,
+    # },
+    # 'high': {
+    #     'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'), # If you're on Heroku
+    #     'DEFAULT_TIMEOUT': 500,
+    # },
+    # 'low': {
+    #     'HOST': 'localhost',
+    #     'PORT': 6379,
+    #     'DB': 0,
+    # }
+}
 
 
 # Password validation

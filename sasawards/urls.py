@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 import awards.views
 
@@ -23,4 +23,5 @@ urlpatterns = [
     path("flights/", awards.views.show_seats_and_changes, name="show_seats_and_changes"),
     path("mock/", awards.views.mock, name="mock"),
     path('admin/', admin.site.urls),
+    path('django-rq/', include('django_rq.urls'))
 ]

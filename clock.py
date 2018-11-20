@@ -1,39 +1,19 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+import os
 
-from awards.models import Flight
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 sched = BlockingScheduler()
 
 
-# def apa():
-#     from awards.models import Flight
-#     print('flights: {}'.format(Flight.objects.all()))
-#
-#
-# def start():
-#     scheduler = BackgroundScheduler()
-#     scheduler.add_job(apa, 'interval', minutes=1)
-#     scheduler.start()
-
-
 @sched.scheduled_job('interval', minutes=1)  # TODO: Temp
 def timed_job():
     print('This job is run every fifteen minutes.')
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
+    import django_rq
+    from sas_api import a_test
+    django_rq.enqueue(a_test.a_test)
     # from sas_api.services import fetch_flights
     # fetch_flights()
-
-    # Add as mgmt command
-    # Use RQ (but does it have access to the Django env/db?)
-    # Run it inside the web (bad...?)
-    print('flights: {}'.format(Flight.objects.all()))
-
-
-# @sched.scheduled_job('interval', minutes=10)
-# def keep_alive():
-#     pass
-    # requests.get('http://peaceful-crag-39211.herokuapp.com')
-    # print('keep alive')
 
 
 sched.start()

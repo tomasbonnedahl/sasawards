@@ -1,9 +1,8 @@
 from collections import namedtuple
 from datetime import datetime, timedelta
 
-from awards.flight_getter import xxx
 from conf import MAX_DATE, DAYS_AHEAD, MIN_DATE, DESTINATIONS, BASE_URL
-# from sas_api.flight_getter import xxx
+from sas_api.flight_getter import xxx
 
 Config = namedtuple('Config', 'base_url min_date max_date destinations')
 
