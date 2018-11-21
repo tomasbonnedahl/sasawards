@@ -3,6 +3,7 @@
 
 # BASE_URL = 'http://localhost:5000/dummy/?'
 BASE_URL = 'https://thawing-ravine-34523.herokuapp.com/mock/?'
+# BASE_URL = 'http://127.0.0.1:7878/mock/?'
 # BASE_URL = 'https://api.flysas.com/offers/flights?'
 
 MIN_DATE = '20191002'
