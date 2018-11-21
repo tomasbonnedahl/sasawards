@@ -19,11 +19,9 @@ sched = BackgroundScheduler()
 
 @sched.scheduled_job('interval', minutes=45)  # TODO: Temp
 def timed_job():
-    print('This job is run every five minutes.')
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
+
     import django_rq
-    # from sas_api import a_test
-    # django_rq.enqueue(a_test.a_test)
     from sas_api.services import fetch_flights
     django_rq.enqueue(fetch_flights)
 
