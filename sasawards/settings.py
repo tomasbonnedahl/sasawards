@@ -77,15 +77,7 @@ if 'DATABASE_URL' in os.environ:
     import dj_database_url
 
     DATABASES = {'default': dj_database_url.config()}
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
 
-if 'DATABASE_URL' in os.environ:
     # Hack
     RQ_QUEUES = {
         'default': {
@@ -94,7 +86,13 @@ if 'DATABASE_URL' in os.environ:
         },
     }
 else:
-    print('***** Local')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
     RQ_QUEUES = {
         'default': {
             'HOST': 'localhost',
@@ -103,39 +101,7 @@ else:
             'PASSWORD': 'tomas',
             'DEFAULT_TIMEOUT': 360,
         },
-
     }
-
-# RQ_QUEUES = {
-#     # 'default': {
-#     #     'HOST': 'localhost',
-#     #     'PORT': 6379,
-#     #     'DB': 0,
-#     #     'PASSWORD': 'tomas',
-#     #     'DEFAULT_TIMEOUT': 360,
-#     # },
-#     'default': {
-#         'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'), # If you're on Heroku
-#         'DEFAULT_TIMEOUT': 500,
-#     },
-#
-#     # 'with-sentinel': {
-#     #    'SENTINELS': [('localhost', 26736), ('localhost', 26737)],
-#     #    'MASTER_NAME': 'redismaster',
-#     #    'DB': 0,
-#     #    'PASSWORD': 'secret',
-#     #    'SOCKET_TIMEOUT': None,
-#     # },
-#     # 'high': {
-#     #     'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'), # If you're on Heroku
-#     #     'DEFAULT_TIMEOUT': 500,
-#     # },
-#     # 'low': {
-#     #     'HOST': 'localhost',
-#     #     'PORT': 6379,
-#     #     'DB': 0,
-#     # }
-# }
 
 
 # Password validation
