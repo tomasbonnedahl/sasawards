@@ -25,6 +25,7 @@ SECRET_KEY = '@7bq*xy%z2mdwhdc_i_alxpb-iv79%(xkxyg3q(%)ek3*48nsk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# TODO: Why was this not needed in the getting-started?
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -98,7 +99,7 @@ else:
             'HOST': 'localhost',
             'PORT': 6379,
             'DB': 0,
-            'PASSWORD': 'tomas',
+            'PASSWORD': 'tomas',  # TODO: .env
             'DEFAULT_TIMEOUT': 360,
         },
     }

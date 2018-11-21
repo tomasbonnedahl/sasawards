@@ -8,7 +8,6 @@ import requests
 
 from awards.models import Flight, Changes
 
-
 LegData = namedtuple('LegData', 'origin destination date business_seats')
 
 
@@ -73,6 +72,7 @@ class ResponseParser(object):
                                    origin=outbound[flight_id]['origin']['code'],
                                    destination=outbound[flight_id]['destination']['code'],
                                    date=date_t.date())
+        return None
 
 
 def get_flight_info(config):
@@ -101,17 +101,25 @@ def handle_flight_response(flight_info):
 
     print('Got flight info')
     for updated_flight in flight_info:
-        print(updated_flight)
+        print("Updated flight: {}".format(updated_flight))
+
+        if updated_flight is None:
+            # TODO: We should still update the flight that it's removed/no seats/etc
+            continue
+
         existing = Flight.objects.filter(origin=updated_flight.origin,
                                          destination=updated_flight.destination,
                                          date=updated_flight.date)
         if existing:
-            existing_flight = existing.first()  # Should only be one
-            if updated_flight.business_seats > existing_flight.business_seats:
-                Changes.objects.create(prev_business_seats=existing_flight.business_seats,
-                                       to=existing_flight)
+            if len(existing) != 1:
+                # TODO: log properly instead
+                print('Warning, len(existing) = {}'.format(len(existing)))
 
-            existing_flight.update(business_seats=updated_flight.business_seats)
+            if updated_flight.business_seats > existing.first().business_seats:
+                Changes.objects.create(prev_business_seats=existing.first().business_seats,
+                                       to=existing.first())
+
+            existing.update(business_seats=updated_flight.business_seats)
         else:
             # get_or_create?
             new_flight = Flight.objects.create(origin=updated_flight.origin,

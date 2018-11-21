@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from awards.models import Dummy2, Flight, Changes
-from sas_api.mock_data import get_response
+from sas_api.mock_data import get_mock_response
 
 
 def index(request):
@@ -29,9 +29,9 @@ def mock(request):
     print(request.GET.get('outDate', ''))
 
     get_data = request.GET
-    response = get_response(origin=get_data.get('from'),
-                            destination=get_data.get('to'),
-                            out_date=get_data.get('outDate', ''))
+    response = get_mock_response(origin=get_data.get('from'),
+                                 destination=get_data.get('to'),
+                                 out_date=get_data.get('outDate', ''))
 
     # return JsonResponse(s)
     return HttpResponse(response, content_type="application/json")

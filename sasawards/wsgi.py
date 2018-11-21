@@ -14,26 +14,19 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sasawards.settings')
 
-import os
 
-from apscheduler.schedulers.blocking import BlockingScheduler
-
-# sched = BlockingScheduler()
+# TODO: Import clock instead
 sched = BackgroundScheduler()
 
 @sched.scheduled_job('interval', minutes=1)  # TODO: Temp
 def timed_job():
-    print('This job is run every one minutes.')
+    print('This job is run every five minutes.')
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
     import django_rq
-    from sas_api import a_test
-    print('Queuing in wsgi...')
-    django_rq.enqueue(a_test.a_test)
-    print('Queued')
-    # from sas_api.services import fetch_flights
-    # fetch_flights()
+    # from sas_api import a_test
+    # django_rq.enqueue(a_test.a_test)
+    from sas_api.services import fetch_flights
+    django_rq.enqueue(fetch_flights)
 
-print('wsgi')
 sched.start()
-
 application = get_wsgi_application()
