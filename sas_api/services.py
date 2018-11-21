@@ -1,23 +1,11 @@
-from collections import namedtuple
-from datetime import datetime, timedelta
-
-from conf import MAX_DATE, DAYS_AHEAD, MIN_DATE, DESTINATIONS, BASE_URL
-from sas_api.flight_getter import xxx
-
-Config = namedtuple('Config', 'base_url min_date max_date destinations')
+from sas_api.config import create_config
+from sas_api.requester import FlightGetter, Requester
+from sas_api.parser import ResponseParser
+from sas_api.response_handler import ResponseHandler
 
 
-def create_config():
-    min_date = datetime.strptime(MIN_DATE, "%Y%m%d").date()
-    if MAX_DATE is not None:
-        max_date = datetime.strptime(MAX_DATE, "%Y%m%d").date()
-    else:
-        max_date = datetime.now().date() + timedelta(days=DAYS_AHEAD)
-
-    return Config(base_url=BASE_URL, min_date=min_date, max_date=max_date, destinations=DESTINATIONS)
-
-
-def fetch_flights():
+def get_new_flight_data():
     config = create_config()
-    xxx(config)
-    # TODO: SasRequestGetter(base_url).request(from, to, date) - returns Python dict
+    requester = Requester(config.base_url)
+    response = FlightGetter(config, requester, ResponseParser()).execute()
+    ResponseHandler(response).execute()

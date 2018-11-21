@@ -1,19 +1,16 @@
 import os
 
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
-sched = BlockingScheduler()
+sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('interval', minutes=1)  # TODO: Temp
+@sched.scheduled_job('interval', minutes=45)  # TODO: Temp
 def timed_job():
-    print('This job is run every fifteen minutes.')
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
-    import django_rq
-    from sas_api import a_test
-    django_rq.enqueue(a_test.a_test)
-    # from sas_api.services import fetch_flights
-    # fetch_flights()
 
+    import django_rq
+    from sas_api.services import get_new_flight_data
+    django_rq.enqueue(get_new_flight_data)
 
 sched.start()

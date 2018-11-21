@@ -22,8 +22,8 @@ def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
 
     import django_rq
-    from sas_api.services import fetch_flights
-    django_rq.enqueue(fetch_flights)
+    from sas_api.services import get_new_flight_data
+    django_rq.enqueue(get_new_flight_data)
 
 sched.start()
 application = get_wsgi_application()

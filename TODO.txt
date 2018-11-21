@@ -1,3 +1,4 @@
+- Move all keys, urls and such to .env
 - Add 2 new output files to dummy and make sure they work
 - Write proper test cases
 - Refactor the getting of data
