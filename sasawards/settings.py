@@ -85,26 +85,26 @@ else:
         }
     }
 
-if 'DATABASE_URL' in os.environ:
+# if 'DATABASE_URL' in os.environ:
     # Hack
-    RQ_QUEUES = {
-        'default': {
-            'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
-            'DEFAULT_TIMEOUT': 500,
-        },
-    }
-else:
-    print('***** Local')
-    RQ_QUEUES = {
-        'default': {
-            'HOST': 'localhost',
-            'PORT': 6379,
-            'DB': 0,
-            'PASSWORD': 'tomas',
-            'DEFAULT_TIMEOUT': 360,
-        },
-
-    }
+RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
+        'DEFAULT_TIMEOUT': 500,
+    },
+}
+# else:
+#     print('***** Local')
+#     RQ_QUEUES = {
+#         'default': {
+#             'HOST': 'localhost',
+#             'PORT': 6379,
+#             'DB': 0,
+#             'PASSWORD': 'tomas',
+#             'DEFAULT_TIMEOUT': 360,
+#         },
+#
+#     }
 
 # RQ_SHOW_ADMIN_LINK=False
 
