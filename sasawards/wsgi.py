@@ -17,7 +17,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sasawards.settings')
 # TODO: Import clock instead
 sched = BackgroundScheduler()
 
-@sched.scheduled_job('interval', minutes=45)  # TODO: Temp
+@sched.scheduled_job('interval', minutes=1)  # TODO: Temp
 def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
 

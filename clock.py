@@ -5,7 +5,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('interval', minutes=45)  # TODO: Temp
+@sched.scheduled_job('interval', minutes=1)  # TODO: Temp
 def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
 
