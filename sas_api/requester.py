@@ -1,5 +1,6 @@
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from datetime import timedelta
+from enum import Enum
 from random import random
 from time import sleep
 
@@ -7,6 +8,27 @@ import requests
 
 # TODO: have a dict instead? Check for keys, e.g. business_seats
 LegData = namedtuple('LegData', 'origin destination date business_seats')
+
+
+class CabinClass(Enum):
+    BUSINESS = 1
+    PLUS = 2
+    GO = 3
+
+
+class Result(object):
+    def __init__(self, origin, destination, out_date):
+        self.origin = origin
+        self.destination = destination
+        self.out_date = out_date
+        self.seats_by_cabin_class = defaultdict(int)
+
+    def add(self, cabin_class, seats):
+        """
+        :type cabin_class: CabinClass
+        :type seats: int
+        """
+        self.seats_by_cabin_class[cabin_class] = seats
 
 
 class Requester(object):

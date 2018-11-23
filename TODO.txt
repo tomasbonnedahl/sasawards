@@ -1,4 +1,5 @@
-- Set up a Tmux project
+- Set up tmux
+- Model with Seats which points to cabin enum (PLUS/BUSINESS) and available_seats
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Add a separate mock app with all mock data used for testing
 - Move all keys, urls and such to .env
