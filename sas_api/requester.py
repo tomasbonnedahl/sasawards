@@ -30,6 +30,12 @@ class Result(object):
         """
         self.seats_by_cabin_class[cabin_class] = seats
 
+    def seats_in_cabin(self, cabin_class):
+        """
+        :type cabin_class: CabinClass
+        """
+        return self.seats_by_cabin_class[cabin_class]
+
 
 class Requester(object):
     def __init__(self, base_url):

@@ -13,7 +13,6 @@ class ResponseParser(object):
         except Exception as e:
             print('Exception caught: {}'.format(e))
             print(json.dumps(response))
-            raise
         return None
 
     def __parse(self, response):
@@ -50,11 +49,12 @@ class ResponseParser(object):
             for cabin, avl_seats in seats_by_cabin.items():
                 result.add(cabin_class=self.__cabin_mapper(cabin), seats=avl_seats)
 
-            # TODO: Remove and use result instead
-            return LegData(business_seats=business_seats,
-                           origin=flight_id['origin']['code'],
-                           destination=flight_id['destination']['code'],
-                           date=out_date)
+            return result
+            # # TODO: Remove and use result instead
+            # return LegData(business_seats=business_seats,
+            #                origin=flight_id['origin']['code'],
+            #                destination=flight_id['destination']['code'],
+            #                date=out_date)
         return None
 
     def __seats_by_cabin(self, cabins):
