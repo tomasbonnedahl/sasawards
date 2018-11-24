@@ -4,9 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 sched = BackgroundScheduler()
 
-
-# TODO: Use this in wsgi
-@sched.scheduled_job('interval', minutes=2)  # TODO: Temp
+@sched.scheduled_job('interval', minutes=1)  # TODO: Temp
 def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
 

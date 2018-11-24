@@ -14,16 +14,7 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sasawards.settings')
 
-# TODO: Import clock instead
-sched = BackgroundScheduler()
+# Schedules the background jobs
+import clock
 
-@sched.scheduled_job('interval', minutes=1)  # TODO: Temp
-def timed_job():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
-
-    import django_rq
-    from sas_api.services import get_new_flight_data
-    django_rq.enqueue(get_new_flight_data)
-
-sched.start()
 application = get_wsgi_application()
