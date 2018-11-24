@@ -1,9 +1,9 @@
 from collections import namedtuple
 from datetime import datetime, timedelta
 
-from conf import MIN_DATE, MAX_DATE, DAYS_AHEAD, BASE_URL, DESTINATIONS
+from conf import MIN_DATE, MAX_DATE, DAYS_AHEAD, BASE_URL, DESTINATIONS, ORIGINS, SECONDS_BETWEEN_REQUESTS
 
-Config = namedtuple('Config', 'base_url min_date max_date destinations')
+Config = namedtuple('Config', 'base_url min_date max_date origins destinations seconds')
 
 
 def create_config():
@@ -13,4 +13,9 @@ def create_config():
     else:
         max_date = datetime.now().date() + timedelta(days=DAYS_AHEAD)
 
-    return Config(base_url=BASE_URL, min_date=min_date, max_date=max_date, destinations=DESTINATIONS)
+    return Config(base_url=BASE_URL,
+                  min_date=min_date,
+                  max_date=max_date,
+                  origins=ORIGINS,
+                  destinations=DESTINATIONS,
+                  seconds=SECONDS_BETWEEN_REQUESTS)

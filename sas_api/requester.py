@@ -62,22 +62,27 @@ class Requester(object):
 
 class FlightGetter(object):
     def __init__(self, config, requester, parser):
+        """
+        :type config: sas_api.config.Config
+        """
         self.config = config
         self.parser = parser
         self.requester = requester
 
     def execute(self):
         parsed_data = []
-        for dst in self.config.destinations:
-            for day in range(self.__days):
-                out_date = self.config.min_date + timedelta(day)
-                json_data = self.requester.request(origin='CPH', destination=dst, out_date=out_date)
-                result = self.parser.parse(json_data)
-                if result:
-                    parsed_data.append(result)
+        for origin in self.config.origins:
+            for dst in self.config.destinations:
+                for day in range(self.__days):
+                    out_date = self.config.min_date + timedelta(day)
+                    json_data = self.requester.request(origin=origin,
+                                                       destination=dst,
+                                                       out_date=out_date)
+                    result = self.parser.parse(json_data)
+                    if result:
+                        parsed_data.append(result)
 
-                # TODO: Get this from config instead
-                sleep(1 + round(random(), 2))
+                    sleep(self.config.seconds + round(random(), 2))
         return parsed_data
 
     @property
