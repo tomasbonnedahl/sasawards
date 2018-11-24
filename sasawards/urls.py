@@ -17,11 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 import awards.views
+import mock_endpoint.views
 
 urlpatterns = [
     path("", awards.views.index, name="index"),
     path("flights/", awards.views.show_seats_and_changes, name="show_seats_and_changes"),
-    path("mock/", awards.views.mock, name="mock"),
+    path("mock/", mock_endpoint.views.mock, name="mock"),
     path('admin/', admin.site.urls),
     path('django-rq/', include('django_rq.urls'))
 ]
