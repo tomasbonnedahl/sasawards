@@ -8,9 +8,9 @@ import requests
 
 
 class CabinClass(Enum):
-    BUSINESS = 1
-    PLUS = 2
-    GO = 3
+    BUSINESS = 'b'
+    PLUS = 'p'
+    GO = 'g'
 
 
 class Result(object):

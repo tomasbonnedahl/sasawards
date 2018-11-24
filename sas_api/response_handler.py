@@ -23,13 +23,14 @@ class ResponseHandler(object):
 
         flight, created = Flight.objects.get_or_create(origin=new_flight.origin,
                                                        destination=new_flight.destination,
-                                                       date=new_flight.out_date)
+                                                       date=new_flight.out_date,
+                                                       cabin=CabinClass.BUSINESS)
 
         if created or self._positive_change(existing_flight=flight, new_flight=new_flight):
-            Changes.objects.create(prev_business_seats=flight.business_seats if flight else 0,
+            Changes.objects.create(prev_seats=flight.seats if flight else 0,
                                    to=flight)
 
-        flight.business_seats = flight.business_seats
+        flight.seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
         flight.save()
 
     def _positive_change(self, existing_flight, new_flight):
@@ -38,4 +39,4 @@ class ResponseHandler(object):
         """
         if not existing_flight:
             return True
-        return new_flight.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.business_seats
+        return new_flight.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.seats

@@ -1,15 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from awards.models import Dummy2, Flight, Changes
+from awards.models import Flight, Changes
 
 
 def index(request):
-    dummy = Dummy2(text='afss')
-    dummy.save()
-    val = Dummy2.objects.all().count()
-
-    return HttpResponse('Hello: {}'.format(val))
+    return HttpResponse('Hello')
 
 
 def show_seats_and_changes(request):

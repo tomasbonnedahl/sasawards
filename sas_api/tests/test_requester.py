@@ -26,7 +26,7 @@ class TestRequester(TestCase):
     def setUp(self):
         pass
 
-    def test_dummy(self):
+    def test_requester(self):
         config = Config('http://dummy',
                         min_date=datetime.date(2018, 7, 20),
                         max_date=datetime.date(2018, 7, 21),
