@@ -74,6 +74,7 @@ class FlightGetter(object):
                 if result:
                     parsed_data.append(result)
 
+                # TODO: Get this from config instead
                 sleep(1 + round(random(), 2))
         return parsed_data
 

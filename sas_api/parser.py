@@ -13,44 +13,48 @@ class ResponseParser(object):
         except Exception as e:
             print('Exception caught: {}'.format(e))
             print(json.dumps(response))
+            raise
         return None
 
     def __parse(self, response):
         if response is None:
             return None
 
-        if 'pricingType' in response and response['pricingType'] == 'O':
+        if 'errors' in response:
+            return None
+
+        if response.get('pricingType', '') == 'O':
             # Paid flights only?
             return None
 
-        # TODO: Clean this up
-        if 'outboundFlights' in response:
-            outbound = response['outboundFlights']
-            for flight_id in outbound:
-                if outbound[flight_id]['stops'] == 0:
-                    if 'isSoldOut' in flight_id:  # TODO: Check value is True also
-                        continue
+        outbound = response.get('outboundFlights', [])
+        for flight_id in outbound.values():
+            if flight_id.get('isSoldOut', False):
+                continue
 
-                    a_date = outbound[flight_id]['startTimeInLocal']
-                    stripped_date = a_date.split('+')[0]
-                    date_t = datetime.strptime(stripped_date, "%Y-%m-%dT%H:%M:%S.%f")
+            if flight_id.get('stops', 1):
+                # Only interested in direct flights
+                continue
 
-                    cabins = outbound[flight_id]['cabins']
-                    seats_by_cabin = self.__seats_by_cabin(cabins)
-                    business_seats = seats_by_cabin['BUSINESS']
+            start_date = flight_id['startTimeInLocal'].split('+')[0]
+            out_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f").date()
 
-                    result = Result(origin=outbound[flight_id]['origin']['code'],
-                                    destination=outbound[flight_id]['destination']['code'],
-                                    out_date=date_t.date())
+            cabins = flight_id['cabins']
+            seats_by_cabin = self.__seats_by_cabin(cabins)
+            business_seats = seats_by_cabin['BUSINESS']
 
-                    for cabin, avl_seats in seats_by_cabin.items():
-                        result.add(cabin_class=self.__cabin_mapper(cabin), seats=avl_seats)
+            result = Result(origin=flight_id['origin']['code'],
+                            destination=flight_id['destination']['code'],
+                            out_date=out_date)
 
-                    # TODO: Remove and use result instead
-                    return LegData(business_seats=business_seats,
-                                   origin=outbound[flight_id]['origin']['code'],
-                                   destination=outbound[flight_id]['destination']['code'],
-                                   date=date_t.date())
+            for cabin, avl_seats in seats_by_cabin.items():
+                result.add(cabin_class=self.__cabin_mapper(cabin), seats=avl_seats)
+
+            # TODO: Remove and use result instead
+            return LegData(business_seats=business_seats,
+                           origin=flight_id['origin']['code'],
+                           destination=flight_id['destination']['code'],
+                           date=out_date)
         return None
 
     def __seats_by_cabin(self, cabins):

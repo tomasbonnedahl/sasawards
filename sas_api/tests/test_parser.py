@@ -55,3 +55,11 @@ class TestParser(TestCase):
         assert extracted.destination == 'EWR'
         assert extracted.business_seats == 6, "was {}".format(extracted.business_seats)
         assert extracted.date == datetime.date(2019, 1, 15)
+
+    def test_error(self):
+        input = '''{"errors":[{"errorCode":"225017","errorMessage":"Please select the length of your trip."}]}'''
+        assert ResponseParser().parse(json.loads(input)) is None
+
+    def test_no_matches(self):
+        input = '''{"errors":[{"errorCode":"225036","errorMessage":"Unfortunately, we can't seem to find anything that matches what you're looking for. Please refine your search."}],"offerId":"dec02051-ff0e-45aa-941c-0e7642667e37_2018-11-24"}'''
+        assert ResponseParser().parse(json.loads(input)) is None
