@@ -1,13 +1,12 @@
 import datetime
-
 from unittest import TestCase
 
 from sas_api.config import Config
-from sas_api.requester import FlightGetter, LegData
+from sas_api.requester import FlightGetter, Result, CabinClass
 
 
 class DummyRequester(object):
-    def __init__(self, base_url):
+    def __init__(self, _):
         pass
 
     def request(self, origin, destination, out_date):
@@ -16,10 +15,11 @@ class DummyRequester(object):
 
 class DummyParser(object):
     def parse(self, response):
-        return LegData(business_seats=123,
-                       origin='origin',
-                       destination='destination',
-                       date='date')
+        r = Result(origin='origin',
+                   destination='destination',
+                   out_date='date')
+        r.add(CabinClass.BUSINESS, 123)
+        return r
 
 
 class TestRequester(TestCase):
@@ -36,4 +36,4 @@ class TestRequester(TestCase):
         response = FlightGetter(config, requester, DummyParser()).execute()
 
         assert len(response) == 4
-        assert response[0].business_seats == 123
+        assert response[0].seats_in_cabin(CabinClass.BUSINESS) == 123

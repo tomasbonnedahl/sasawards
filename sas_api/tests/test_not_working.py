@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from awards.models import Flight
 from sas_api.config import Config
-from sas_api.requester import FlightGetter, LegData
+from sas_api.requester import FlightGetter, Result, CabinClass
 from sas_api.response_handler import ResponseHandler
 
 
@@ -17,10 +17,11 @@ class DummyRequester(object):
 
 class DummyParser(object):
     def parse(self, response):
-        return LegData(business_seats=123,
-                       origin='origin',
-                       destination='destination',
-                       date=datetime.date(2019, 10, 10))
+        r = Result(origin='origin',
+                   destination='destination',
+                   out_date=datetime.date(2019, 10, 10))
+        r.add(CabinClass.BUSINESS, 1)
+        return r
 
 
 class TestNotWorking(TestCase):

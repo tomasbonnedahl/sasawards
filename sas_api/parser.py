@@ -1,9 +1,8 @@
 import json
+from collections import defaultdict
 from datetime import datetime
 
-from collections import defaultdict
-
-from sas_api.requester import LegData, Result, CabinClass
+from sas_api.requester import Result, CabinClass
 
 
 class ResponseParser(object):
@@ -40,7 +39,6 @@ class ResponseParser(object):
 
             cabins = flight_id['cabins']
             seats_by_cabin = self.__seats_by_cabin(cabins)
-            business_seats = seats_by_cabin['BUSINESS']
 
             result = Result(origin=flight_id['origin']['code'],
                             destination=flight_id['destination']['code'],
@@ -48,13 +46,8 @@ class ResponseParser(object):
 
             for cabin, avl_seats in seats_by_cabin.items():
                 result.add(cabin_class=self.__cabin_mapper(cabin), seats=avl_seats)
-
             return result
-            # # TODO: Remove and use result instead
-            # return LegData(business_seats=business_seats,
-            #                origin=flight_id['origin']['code'],
-            #                destination=flight_id['destination']['code'],
-            #                date=out_date)
+
         return None
 
     def __seats_by_cabin(self, cabins):

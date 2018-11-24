@@ -1,13 +1,10 @@
-from collections import namedtuple, defaultdict
+from collections import defaultdict
 from datetime import timedelta
 from enum import Enum
 from random import random
 from time import sleep
 
 import requests
-
-# TODO: have a dict instead? Check for keys, e.g. business_seats
-LegData = namedtuple('LegData', 'origin destination date business_seats')
 
 
 class CabinClass(Enum):
@@ -55,7 +52,6 @@ class Requester(object):
         return "&".join([str(k) + str(v) for k, v in value_by_api_keyword.items()])
 
     def request(self, origin, destination, out_date):
-        # Responsible to map params to what the actual API is called
         params = self._params(origin, destination, out_date)
         r = requests.get(self.base_url + params)
         if not r.ok:
