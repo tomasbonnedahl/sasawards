@@ -1,17 +1,16 @@
-- Set up tmux
 - Frequency of travelhacks, how often is data fetched
 - Check if task is already running, don't queue if that is the case
-- Also check return flights
 - Keep-alive needed if not paying $7
-- Add more to parsing, do a few calls to API and get as many variants as possible
+- Remove not used files and make sure apps and models are correct
 - Move all keys, urls and such to .env
-- Add origin, dest, dates to db and have a way to set them from a view
 - E-mail positive changes
+- Add more to parsing, do a few calls to API and get as many variants as possible
+- Set up tmux
+- Add origin, dest, dates to db and have a way to set them from a view
 - Run tests from PyCharm, works with python manage.py test (test_response_handler doesn't work)
-- Add 2 new output files to dummy and make sure they work
-- What is openflight used for in travelhacks?
 - Add a frontend
     - Possible to update the configuration
     - See timestamps
     - See available flights
     - Do trend analysis on when seats are released
+- What is openflight used for in travelhacks?

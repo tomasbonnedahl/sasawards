@@ -37,5 +37,5 @@ class TestRequester(TestCase):
         requester = DummyRequester("")
         response = FlightGetter(config, requester, DummyParser()).execute()
 
-        assert len(response) == 4
+        assert len(response) == 4 + 4  # Outbound and return
         assert response[0].seats_in_cabin(CabinClass.BUSINESS) == 123

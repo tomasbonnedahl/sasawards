@@ -72,9 +72,14 @@ class FlightGetter(object):
 
     def execute(self):
         parsed_data = []
-        combos = [self.config.origins, self.config.destinations, range(self.__days)]
 
-        for origin, dst, day in itertools.product(*combos):
+        outbound_data = [self.config.origins, self.config.destinations, range(self.__days)]
+        inbound_data = [self.config.destinations, self.config.origins, range(self.__days)]
+
+        outbound = itertools.product(*outbound_data)
+        inbound = itertools.product(*inbound_data)
+
+        for origin, dst, day in itertools.chain(outbound, inbound):
             out_date = self.config.min_date + timedelta(day)
             json_data = self.requester.request(origin=origin,
                                                destination=dst,
