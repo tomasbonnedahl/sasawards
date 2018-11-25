@@ -14,6 +14,15 @@ class Flight(models.Model):
     seats = models.IntegerField(default=0)
     cabin = EnumField(CabinClass)
 
+    def __str__(self):
+        return ("Flight {}-{} at {}, {} seats in {}".format(
+            self.origin,
+            self.destination,
+            self.date,
+            self.seats,
+            self.cabin
+        ))
+
 
 class Changes(models.Model):
     """

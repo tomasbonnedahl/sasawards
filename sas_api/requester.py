@@ -4,6 +4,7 @@ from enum import Enum
 from random import random
 from time import sleep
 
+import itertools
 import requests
 
 
@@ -71,18 +72,18 @@ class FlightGetter(object):
 
     def execute(self):
         parsed_data = []
-        for origin in self.config.origins:
-            for dst in self.config.destinations:
-                for day in range(self.__days):
-                    out_date = self.config.min_date + timedelta(day)
-                    json_data = self.requester.request(origin=origin,
-                                                       destination=dst,
-                                                       out_date=out_date)
-                    result = self.parser.parse(json_data)
-                    if result:
-                        parsed_data.append(result)
+        combos = [self.config.origins, self.config.destinations, range(self.__days)]
 
-                    sleep(self.config.seconds + round(random(), 2))
+        for origin, dst, day in itertools.product(*combos):
+            out_date = self.config.min_date + timedelta(day)
+            json_data = self.requester.request(origin=origin,
+                                               destination=dst,
+                                               out_date=out_date)
+            result = self.parser.parse(json_data)
+            if result:
+                parsed_data.append(result)
+
+            sleep(self.config.seconds + round(random(), 2))
         return parsed_data
 
     @property

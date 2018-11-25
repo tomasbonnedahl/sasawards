@@ -1,11 +1,15 @@
-- Add origin to config instead of hardcoding
 - Set up tmux
-- Django model with Seats which points to cabin enum (PLUS/BUSINESS) and available_seats
+- Frequency of travelhacks, how often is data fetched
+- Check if task is already running, don't queue if that is the case
+- Also check return flights
+- Keep-alive needed if not paying $7
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Move all keys, urls and such to .env
+- Add origin, dest, dates to db and have a way to set them from a view
 - E-mail positive changes
 - Run tests from PyCharm, works with python manage.py test (test_response_handler doesn't work)
 - Add 2 new output files to dummy and make sure they work
+- What is openflight used for in travelhacks?
 - Add a frontend
     - Possible to update the configuration
     - See timestamps

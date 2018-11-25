@@ -30,7 +30,9 @@ class TestRequester(TestCase):
         config = Config('http://dummy',
                         min_date=datetime.date(2018, 7, 20),
                         max_date=datetime.date(2018, 7, 21),
-                        destinations=['EWR', 'SFO'])
+                        origins=['CPH'],
+                        destinations=['EWR', 'SFO'],
+                        seconds=0.01)
 
         requester = DummyRequester("")
         response = FlightGetter(config, requester, DummyParser()).execute()
