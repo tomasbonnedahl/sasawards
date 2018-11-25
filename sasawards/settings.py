@@ -76,6 +76,7 @@ WSGI_APPLICATION = 'sasawards.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 if 'DATABASE_URL' in os.environ:
+    # Heroku
     import dj_database_url
 
     DATABASES = {'default': dj_database_url.config()}
@@ -88,6 +89,7 @@ if 'DATABASE_URL' in os.environ:
         },
     }
 else:
+    # Local
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -100,7 +102,7 @@ else:
             'HOST': 'localhost',
             'PORT': 6379,
             'DB': 0,
-            'PASSWORD': 'tomas',  # TODO: .env
+            'PASSWORD': os.environ['REDIS_PASSWD'],
             'DEFAULT_TIMEOUT': 360,
         },
     }
