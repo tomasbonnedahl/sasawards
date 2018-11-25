@@ -32,5 +32,3 @@ class Changes(models.Model):
 
     prev_seats = models.IntegerField(default=0)
     to = models.ForeignKey('Flight', on_delete=models.CASCADE)
-
-# Multiple rows for origin, destination, and date, depends on enum type
