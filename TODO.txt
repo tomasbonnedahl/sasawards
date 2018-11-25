@@ -1,8 +1,8 @@
 - Frequency of travelhacks, how often is data fetched
-- Check if task is already running, don't queue if that is the case
-- Keep-alive needed if not paying $7
+- Keep-alive needed (if not paying $7)
 - Remove not used files and make sure apps and models are correct
 - Move all keys, urls and such to .env
+- Save all errors to see if anything relates to over-use or not authorized
 - E-mail positive changes
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Set up tmux

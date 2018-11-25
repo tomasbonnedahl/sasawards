@@ -1,4 +1,5 @@
 import datetime
+import logging
 from unittest import TestCase
 
 from sas_api.config import Config
@@ -24,7 +25,7 @@ class DummyParser(object):
 
 class TestRequester(TestCase):
     def setUp(self):
-        pass
+        self.log = logging
 
     def test_requester(self):
         config = Config('http://dummy',
@@ -35,7 +36,7 @@ class TestRequester(TestCase):
                         seconds=0.01)
 
         requester = DummyRequester("")
-        response = FlightGetter(config, requester, DummyParser()).execute()
+        response = FlightGetter(config, requester, DummyParser(), self.log).execute()
 
         assert len(response) == 4 + 4  # Outbound and return
         assert response[0].seats_in_cabin(CabinClass.BUSINESS) == 123

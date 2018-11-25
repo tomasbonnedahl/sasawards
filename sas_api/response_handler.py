@@ -3,11 +3,12 @@ from sas_api.requester import CabinClass
 
 
 class ResponseHandler(object):
-    def __init__(self, response):
+    def __init__(self, response, log):
         """
         :type response: list[sas_api.requester.Result]
         """
         self.response = response
+        self.log = log
 
     def execute(self):
         for flight in self.response:
@@ -27,8 +28,7 @@ class ResponseHandler(object):
                                                        cabin=CabinClass.BUSINESS)
 
         if created or self._positive_change(existing_flight=flight, new_flight=new_flight):
-            Changes.objects.create(prev_seats=flight.seats if flight else 0,
-                                   to=flight)
+            Changes.objects.create(prev_seats=flight.seats, to=flight)
 
         flight.seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
         flight.save()

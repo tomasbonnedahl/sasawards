@@ -1,4 +1,5 @@
 import datetime
+import logging
 from unittest import TestCase
 
 from awards.models import Flight, Changes
@@ -8,7 +9,7 @@ from sas_api.response_handler import ResponseHandler
 
 class TestResponseHandler(TestCase):
     def setUp(self):
-        pass
+        self.log = logging
 
     def tearDown(self):
         Flight.objects.all().delete()
@@ -22,7 +23,7 @@ class TestResponseHandler(TestCase):
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 1)
 
-        ResponseHandler([r]).execute()
+        ResponseHandler([r], self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()
@@ -52,7 +53,7 @@ class TestResponseHandler(TestCase):
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 3)  # New value is 3 seats, increase with 1
 
-        ResponseHandler([r]).execute()
+        ResponseHandler([r], self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()
@@ -84,7 +85,7 @@ class TestResponseHandler(TestCase):
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 1)  # New value is 1 seat, decrease with 1
 
-        ResponseHandler([r]).execute()
+        ResponseHandler([r], self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()
@@ -112,13 +113,13 @@ class TestResponseHandler(TestCase):
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 3)  # New value is 3 seats, increase with 1
 
-        ResponseHandler([r]).execute()
+        ResponseHandler([r], self.log).execute()
 
         r2 = Result(origin='origin',
                     destination='destination',
                     out_date=datetime.date(2019, 10, 10))
         r2.add(CabinClass.BUSINESS, 4)  # New value is 4 seats, increase with 1
-        ResponseHandler([r2]).execute()
+        ResponseHandler([r2], self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()

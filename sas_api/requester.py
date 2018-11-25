@@ -36,8 +36,9 @@ class Result(object):
 
 
 class Requester(object):
-    def __init__(self, base_url):
+    def __init__(self, base_url, log):
         self.base_url = base_url
+        self.log = log
 
     def _params(self, origin, destination, out_date):
         """
@@ -56,19 +57,20 @@ class Requester(object):
         params = self._params(origin, destination, out_date)
         r = requests.get(self.base_url + params)
         if not r.ok:
-            print('Not ok for {}-{}@{}, status code: {}'.format(origin, destination, out_date, r.status_code))
+            self.log.error('Not ok for {}-{}@{}, status code: {}'.format(origin, destination, out_date, r.status_code))
             return
         return r.json()
 
 
 class FlightGetter(object):
-    def __init__(self, config, requester, parser):
+    def __init__(self, config, requester, parser, log):
         """
         :type config: sas_api.config.Config
         """
         self.config = config
         self.parser = parser
         self.requester = requester
+        self.log = log
 
     def execute(self):
         parsed_data = []
@@ -86,6 +88,7 @@ class FlightGetter(object):
                                                out_date=out_date)
             result = self.parser.parse(json_data)
             if result:
+                # self.log.info('Got data for {}-{} at {}'.format(origin, dst, out_date))
                 parsed_data.append(result)
 
             sleep(self.config.seconds + round(random(), 2))
