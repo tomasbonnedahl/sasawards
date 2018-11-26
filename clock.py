@@ -13,7 +13,9 @@ def timed_job():
     from rq.worker import logger as rq_logger
     from sas_api.services import get_new_flight_data
 
-    django_rq.enqueue(get_new_flight_data, rq_logger)
+    queue = django_rq.get_queue()
+    if queue.is_empty():
+        django_rq.enqueue(get_new_flight_data, rq_logger)
 
     # worker = django_rq.get_worker()
     # print('worker state: {} for worker {}'.format(worker.get_state(), worker.name))
