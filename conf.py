@@ -1,4 +1,3 @@
-# TODO: Use .env or .txt instead?
 # TODO: Add these to the database and have an interface for it?
 
 MIN_DATE = '20191002'

@@ -1,10 +1,10 @@
-- Do not add to queue if already in queue
 - Do not add to queue if already processing/starting
 - Frequency of travelhacks, how often is data fetched
 - Keep-alive needed (if not paying $7)
 - Move all keys, urls and such to .env
 - Save all errors to see if anything relates to over-use or not authorized
 - E-mail positive changes
+- Empty queue on startup/restart?
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Set up tmux
 - Add origin, dest, dates to db and have a way to set them from a view
