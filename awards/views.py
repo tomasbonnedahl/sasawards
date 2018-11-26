@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from awards.email import send_email
 from awards.models import Flight, Changes
 
 

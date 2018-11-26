@@ -1,4 +1,6 @@
+from awards.email import send_email
 from awards.models import Flight, Changes
+from sas_api.email import EmailService
 from sas_api.requester import CabinClass
 
 
@@ -9,10 +11,12 @@ class ResponseHandler(object):
         """
         self.response = response
         self.log = log
+        self.__email_service = EmailService()
 
     def execute(self):
         for flight in self.response:
             self._handle_flight(flight)
+        self.__email_service.send()
 
     def _handle_flight(self, new_flight):
         """
@@ -29,6 +33,7 @@ class ResponseHandler(object):
 
         if created or self._positive_change(existing_flight=flight, new_flight=new_flight):
             Changes.objects.create(prev_seats=flight.seats, to=flight)
+            self.__email_service.add_flight(new_flight)
 
         flight.seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
         flight.save()
