@@ -1,5 +1,17 @@
-from awards.email import send_email
+import os
+
+from django.conf import settings
+from django.core.mail import send_mail
+
 from sas_api.requester import CabinClass
+
+
+def send_email(message):
+    subject = 'Update from SAS Awards'
+    message = message
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [os.environ['EMAIL_HOST_USER'], ]
+    send_mail(subject, message, email_from, recipient_list)
 
 
 class EmailService(object):
@@ -13,7 +25,7 @@ class EmailService(object):
         self.__email_messages.append(self.__email_message(new_flight))
 
     def send(self):
-        send_email("\n".join(self.__email_messages))
+        send_email("\n\n".join(self.__email_messages))
 
     def __email_message(self, new_flight):
         """

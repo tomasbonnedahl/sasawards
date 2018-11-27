@@ -1,4 +1,5 @@
-- Separate class for e-mails
+- Check that the app doesn't sleep on Heroku after 30 min
+- Add clock as dyno
 - Do not add to queue if already processing/starting
 - Frequency of travelhacks, how often is data fetched
 - Keep-alive needed (if not paying $7)

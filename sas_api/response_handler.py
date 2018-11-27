@@ -1,4 +1,3 @@
-from awards.email import send_email
 from awards.models import Flight, Changes
 from sas_api.email import EmailService
 from sas_api.requester import CabinClass

@@ -7,6 +7,7 @@ MAX_DATE = '20191003'  # Inclusive, could be None
 DAYS_AHEAD = 340
 
 ORIGINS = [
+    'ARN',
     'CPH'
 ]
 
