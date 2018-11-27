@@ -1,10 +1,7 @@
+- Save all errors to see if anything relates to over-use or not authorized
 - Check that the app doesn't sleep on Heroku after 30 min
-- Add clock as dyno
 - Do not add to queue if already processing/starting
 - Frequency of travelhacks, how often is data fetched
-- Keep-alive needed (if not paying $7)
-- Move all keys, urls and such to .env
-- Save all errors to see if anything relates to over-use or not authorized
 - Send e-mail as queueing it as a job
 - Empty queue on startup/restart?
 - Add more to parsing, do a few calls to API and get as many variants as possible
