@@ -19,7 +19,9 @@ class ResponseParser(object):
             return None
 
         if 'errors' in response:
-            return None
+            r = Result()
+            r.add_error(response)
+            return r
 
         if response.get('pricingType', '') == 'O':
             # Paid flights only?

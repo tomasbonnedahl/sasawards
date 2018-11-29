@@ -1,4 +1,4 @@
-from awards.models import Flight, Changes
+from awards.models import Flight, Changes, ApiError
 from sas_api.email import EmailService
 from sas_api.requester import CabinClass
 
@@ -10,7 +10,7 @@ class ResponseHandler(object):
         """
         self.response = response
         self.log = log
-        self.__email_service = EmailService()
+        self.__email_service = EmailService()  # TODO: DIP
 
     def execute(self):
         for flight in self.response:
@@ -23,6 +23,10 @@ class ResponseHandler(object):
         """
         if new_flight is None:
             # TODO: We should still update the flight that it's removed/no seats/etc
+            return
+
+        if new_flight.error is not None:
+            self._handle_error(new_flight)
             return
 
         flight, created = Flight.objects.get_or_create(origin=new_flight.origin,
@@ -44,3 +48,12 @@ class ResponseHandler(object):
         if not existing_flight:
             return True
         return new_flight.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.seats
+
+    def _handle_error(self, new_flight):
+        ApiError.objects.get_or_create(
+            origin=new_flight.origin,
+            destination=new_flight.destination,
+            date=new_flight.out_date,
+            error_str=new_flight.error
+        )
+        self.__email_service.add_error(new_flight)

@@ -32,3 +32,16 @@ class Changes(models.Model):
 
     prev_seats = models.IntegerField(default=0)
     to = models.ForeignKey('Flight', on_delete=models.CASCADE)
+
+
+class ApiError(models.Model):
+    """
+    Catches errors received from the API
+    """
+    ts = models.DateTimeField(auto_now_add=True)
+
+    origin = models.CharField(max_length=30)
+    destination = models.CharField(max_length=30)
+    date = models.DateField(default=datetime.date.today)
+
+    error_str = models.CharField(max_length=1000)

@@ -24,6 +24,16 @@ class EmailService(object):
         """
         self.__email_messages.append(self.__email_message(new_flight))
 
+    def add_error(self, new_flight):
+        """
+        :type new_flight: sas_api.requester.Result
+        """
+        self.__email_messages.append("Error for flight {}-{} at {}".format(
+            new_flight.origin,
+            new_flight.destination,
+            new_flight.out_date
+        ))
+
     def send(self):
         send_email("\n\n".join(self.__email_messages))
 

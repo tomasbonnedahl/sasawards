@@ -15,11 +15,12 @@ class CabinClass(Enum):
 
 
 class Result(object):
-    def __init__(self, origin, destination, out_date):
+    def __init__(self, origin=None, destination=None, out_date=None):
         self.origin = origin
         self.destination = destination
         self.out_date = out_date
         self.seats_by_cabin_class = defaultdict(int)
+        self.error = None
 
     def add(self, cabin_class, seats):
         """
@@ -27,6 +28,12 @@ class Result(object):
         :type seats: int
         """
         self.seats_by_cabin_class[cabin_class] = seats
+
+    def add_error(self, error):
+        """
+        :type error: str
+        """
+        self.error = error
 
     def seats_in_cabin(self, cabin_class):
         """
@@ -88,11 +95,19 @@ class FlightGetter(object):
                                                out_date=out_date)
             result = self.parser.parse(json_data)
             if result:
-                # self.log.info('Got data for {}-{} at {}'.format(origin, dst, out_date))
+                if not all([result.origin, result.destination, result.out_date]):
+                    result.origin = origin
+                    result.destination = dst
+                    result.out_date = day
                 parsed_data.append(result)
 
             sleep(self.config.seconds + round(random(), 2))
+
         return parsed_data
+
+    @property
+    def errors(self):
+        return self.errors
 
     @property
     def __days(self):
