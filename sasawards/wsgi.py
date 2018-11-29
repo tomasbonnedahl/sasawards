@@ -13,4 +13,7 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sasawards.settings')
 
+# Schedules the jobs
+import clock
+
 application = get_wsgi_application()

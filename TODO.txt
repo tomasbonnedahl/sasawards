@@ -1,5 +1,5 @@
+- Fix clock in wsgi.py and self-ping interval to avoid sleeping
 - Save all errors to see if anything relates to over-use or not authorized
-- Check that the app doesn't sleep on Heroku after 30 min
 - Do not add to queue if already processing/starting
 - Proper logging
 - Frequency of travelhacks, how often is data fetched

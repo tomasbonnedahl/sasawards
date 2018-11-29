@@ -1,15 +1,16 @@
 import os
 
-import django
-from apscheduler.schedulers.blocking import BlockingScheduler
+import requests
+from apscheduler.schedulers.background import BackgroundScheduler
 
-sched = BlockingScheduler()
+# sched = BlockingScheduler()  # Use when in separate clock dyno
+sched = BackgroundScheduler()  # Use when used from wsgi.py
 
 
-@sched.scheduled_job('interval', minutes=60)
+@sched.scheduled_job('interval', minutes=1)
 def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
-    django.setup()
+    # django.setup()  # Only used when in separate dyno?
 
     import django_rq
     from rq.worker import logger as rq_logger
@@ -22,6 +23,11 @@ def timed_job():
     # worker = django_rq.get_worker()
     # print('worker state: {} for worker {}'.format(worker.get_state(), worker.name))
     # if worker.get_state() == 'idle':
+
+
+@sched.scheduled_job('interval', minutes=20)
+def keep_alive():
+    requests.get('http://thawing-ravine-34523.herokuapp.com')
 
 
 sched.start()
