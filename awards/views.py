@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from awards.models import Flight, Changes
+from awards.models import Flight, Changes, ApiError
 
 
 def index(request):
@@ -11,4 +11,8 @@ def index(request):
 def show_seats_and_changes(request):
     flights = Flight.objects.all()
     changes = Changes.objects.all()
-    return render(request, "flights.html", {"flights": flights, "changes": changes})
+    errors = ApiError.objects.all()
+    return render(request, "flights.html", {"flights": flights,
+                                            "changes": changes,
+                                            "errors": errors,
+                                            })

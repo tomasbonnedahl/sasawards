@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import timedelta
+from datetime import timedelta, datetime
 from enum import Enum
 from random import random
 from time import sleep
@@ -98,7 +98,7 @@ class FlightGetter(object):
                 if not all([result.origin, result.destination, result.out_date]):
                     result.origin = origin
                     result.destination = dst
-                    result.out_date = day
+                    result.out_date = out_date
                 parsed_data.append(result)
 
             sleep(self.config.seconds + round(random(), 2))
