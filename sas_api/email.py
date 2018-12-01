@@ -6,8 +6,7 @@ from django.core.mail import send_mail
 from sas_api.requester import CabinClass
 
 
-def send_email(message):
-    subject = 'Update from SAS Awards'
+def send_email(subject, message):
     message = message
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [os.environ['EMAIL_HOST_USER'], ]
@@ -34,8 +33,9 @@ class EmailService(object):
             new_flight.out_date
         ))
 
-    def send(self):
-        send_email("\n\n".join(self.__email_messages))
+    def send(self, subject):
+        send_email(subject, "\n\n".join(self.__email_messages))
+        self.__email_messages = []  # Do not want to keep old messages once sent
 
     def __email_message(self, new_flight):
         """

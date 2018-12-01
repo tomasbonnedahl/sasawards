@@ -1,34 +1,29 @@
 from awards.models import Flight, Changes, ApiError
-from sas_api.email import EmailService
 from sas_api.requester import CabinClass
 
 
 class ResponseHandler(object):
-    def __init__(self, response, log):
+    def __init__(self, response, email_service, log):
         """
-        :type response: list[sas_api.requester.Result]
+        :type response: sas_api.requester.ResultHandler
         """
         self.response = response
         self.log = log
-        self.__email_service = EmailService()  # TODO: DIP
+        self.email_service = email_service
 
     def execute(self):
-        for flight in self.response:
+        for flight in self.response.valid_results:
             self._handle_flight(flight)
-        self.__email_service.send()
+        self.email_service.send('Update from SAS Awards')
+
+        for error in self.response.errors:
+            self._handle_error(error)
+        self.email_service.send('Errors from SAS Awards')
 
     def _handle_flight(self, new_flight):
         """
         :type new_flight: sas_api.requester.Result
         """
-        if new_flight is None:
-            # TODO: We should still update the flight that it's removed/no seats/etc
-            return
-
-        if new_flight.error is not None:
-            self._handle_error(new_flight)
-            return
-
         flight, created = Flight.objects.get_or_create(origin=new_flight.origin,
                                                        destination=new_flight.destination,
                                                        date=new_flight.out_date,
@@ -36,7 +31,7 @@ class ResponseHandler(object):
 
         if created or self._positive_change(existing_flight=flight, new_flight=new_flight):
             Changes.objects.create(prev_seats=flight.seats, to=flight)
-            self.__email_service.add_flight(new_flight)
+            self.email_service.add_flight(new_flight)
 
         flight.seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
         flight.save()
@@ -56,4 +51,4 @@ class ResponseHandler(object):
             date=new_flight.out_date,
             error_str=new_flight.error
         )
-        self.__email_service.add_error(new_flight)
+        self.email_service.add_error(new_flight)

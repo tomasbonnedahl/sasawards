@@ -1,12 +1,14 @@
-- Fix clock in wsgi.py and self-ping interval to avoid sleeping
-- Save all errors to see if anything relates to over-use or not authorized
+- Fix models to have bus, plus seats
+- Remove errors after a while
+- Send e-mails regarding errors separately (separate job?)
 - Do not add to queue if already processing/starting
 - Proper logging
 - Frequency of travelhacks, how often is data fetched
-- Send e-mail as queueing it as a job
+- Send e-mail by queueing it as a job
 - Empty queue on startup/restart?
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Set up tmux
+- Handle plus seats
 - Add origin, dest, dates to db and have a way to set them from a view (django superuser?)
 - Run tests from PyCharm, works with python manage.py test (test_response_handler doesn't work)
 - Add a frontend

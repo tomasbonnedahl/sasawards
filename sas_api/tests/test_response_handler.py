@@ -3,13 +3,27 @@ import logging
 from unittest import TestCase
 
 from awards.models import Flight, Changes
-from sas_api.requester import Result, CabinClass
+from sas_api.email import EmailService
+from sas_api.requester import Result, CabinClass, ResultHandler
 from sas_api.response_handler import ResponseHandler
+
+
+class DummyEmailService(object):
+    # TODO: Mock
+    def add_flight(self, new_flight):
+        pass
+
+    def add_error(self, new_flight):
+        pass
+
+    def send(self):
+        pass
 
 
 class TestResponseHandler(TestCase):
     def setUp(self):
         self.log = logging
+        self.email_service = EmailService()
 
     def tearDown(self):
         Flight.objects.all().delete()
@@ -22,8 +36,13 @@ class TestResponseHandler(TestCase):
                    destination='destination',
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 1)
+        result_handler = ResultHandler()
+        result_handler.add(origin='origin',
+                           destination='destination',
+                           out_date=datetime.date(2019, 10, 10),
+                           result=r)
 
-        ResponseHandler([r], self.log).execute()
+        ResponseHandler(result_handler, self.email_service, self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()
@@ -53,7 +72,13 @@ class TestResponseHandler(TestCase):
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 3)  # New value is 3 seats, increase with 1
 
-        ResponseHandler([r], self.log).execute()
+        result_handler = ResultHandler()
+        result_handler.add(origin='origin',
+                           destination='destination',
+                           out_date=datetime.date(2019, 10, 10),
+                           result=r)
+
+        ResponseHandler(result_handler, self.email_service, self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()
@@ -85,7 +110,13 @@ class TestResponseHandler(TestCase):
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 1)  # New value is 1 seat, decrease with 1
 
-        ResponseHandler([r], self.log).execute()
+        result_handler = ResultHandler()
+        result_handler.add(origin='origin',
+                           destination='destination',
+                           out_date=datetime.date(2019, 10, 10),
+                           result=r)
+
+        ResponseHandler(result_handler, self.email_service, self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()
@@ -113,13 +144,29 @@ class TestResponseHandler(TestCase):
                    out_date=datetime.date(2019, 10, 10))
         r.add(CabinClass.BUSINESS, 3)  # New value is 3 seats, increase with 1
 
-        ResponseHandler([r], self.log).execute()
+        result_handler = ResultHandler()
+        result_handler.add(origin='origin',
+                           destination='destination',
+                           out_date=datetime.date(2019, 10, 10),
+                           result=r)
+
+        ResponseHandler(result_handler, self.email_service, self.log).execute()
+
+        flight = Flight.objects.first()
+        assert flight.seats == r.seats_in_cabin(CabinClass.BUSINESS)
 
         r2 = Result(origin='origin',
                     destination='destination',
                     out_date=datetime.date(2019, 10, 10))
         r2.add(CabinClass.BUSINESS, 4)  # New value is 4 seats, increase with 1
-        ResponseHandler([r2], self.log).execute()
+
+        result_handler = ResultHandler()
+        result_handler.add(origin='origin',
+                           destination='destination',
+                           out_date=datetime.date(2019, 10, 10),
+                           result=r2)
+
+        ResponseHandler(result_handler, self.email_service, self.log).execute()
 
         assert Flight.objects.count() == 1
         flight = Flight.objects.first()

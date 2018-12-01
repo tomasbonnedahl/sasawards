@@ -15,12 +15,12 @@ class CabinClass(Enum):
 
 
 class Result(object):
-    def __init__(self, origin=None, destination=None, out_date=None):
+    def __init__(self, origin=None, destination=None, out_date=None, error=None):
         self.origin = origin
         self.destination = destination
         self.out_date = out_date
         self.seats_by_cabin_class = defaultdict(int)
-        self.error = None
+        self.error = error
 
     def add(self, cabin_class, seats):
         """
@@ -35,11 +35,36 @@ class Result(object):
         """
         self.error = error
 
+    def has_errors(self):
+        return self.error is not None
+
     def seats_in_cabin(self, cabin_class):
         """
         :type cabin_class: CabinClass
         """
         return self.seats_by_cabin_class[cabin_class]
+
+
+class ResultHandler(object):
+    def __init__(self):
+        self.valid_results = []
+        self.errors = []
+
+    def add(self, origin, destination, out_date, result):
+        """
+        :type result: Result
+        """
+        if not all([result.origin, result.destination, result.out_date]):
+            result.origin = origin
+            result.destination = destination
+            result.out_date = out_date
+
+        if result is None:
+            self.errors.append(result)
+        elif result.error is not None:
+            self.errors.append(result)
+        else:
+            self.valid_results.append(result)
 
 
 class Requester(object):
@@ -78,10 +103,9 @@ class FlightGetter(object):
         self.parser = parser
         self.requester = requester
         self.log = log
+        self.result_handler = ResultHandler()
 
     def execute(self):
-        parsed_data = []
-
         outbound_data = [self.config.origins, self.config.destinations, range(self.__days)]
         inbound_data = [self.config.destinations, self.config.origins, range(self.__days)]
 
@@ -94,16 +118,11 @@ class FlightGetter(object):
                                                destination=dst,
                                                out_date=out_date)
             result = self.parser.parse(json_data)
-            if result:
-                if not all([result.origin, result.destination, result.out_date]):
-                    result.origin = origin
-                    result.destination = dst
-                    result.out_date = out_date
-                parsed_data.append(result)
+            self.result_handler.add(origin, dst, out_date, result)
 
             sleep(self.config.seconds + round(random(), 2))
 
-        return parsed_data
+        return self.result_handler
 
     @property
     def errors(self):
