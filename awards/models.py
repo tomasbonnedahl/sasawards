@@ -2,8 +2,6 @@ import datetime
 from django.db import models
 from enumfields import EnumField
 
-from sas_api.requester import CabinClass
-
 
 class Flight(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
@@ -11,16 +9,16 @@ class Flight(models.Model):
     origin = models.CharField(max_length=30)
     destination = models.CharField(max_length=30)
     date = models.DateField(default=datetime.date.today)
-    seats = models.IntegerField(default=0)
-    cabin = EnumField(CabinClass)
+    business_seats = models.IntegerField(default=0)
+    plus_seats = models.IntegerField(default=0)
 
     def __str__(self):
-        return ("Flight {}-{} at {}, {} seats in {}".format(
+        return ("Flight {}-{} at {}, {}/{} (bus/plus)".format(
             self.origin,
             self.destination,
             self.date,
-            self.seats,
-            self.cabin
+            self.business_seats,
+            self.plus_seats
         ))
 
 

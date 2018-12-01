@@ -1,3 +1,4 @@
+- Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
 - Fix models to have bus, plus seats
 - Remove errors after a while
 - Send e-mails regarding errors separately (separate job?)

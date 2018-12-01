@@ -26,14 +26,13 @@ class ResponseHandler(object):
         """
         flight, created = Flight.objects.get_or_create(origin=new_flight.origin,
                                                        destination=new_flight.destination,
-                                                       date=new_flight.out_date,
-                                                       cabin=CabinClass.BUSINESS)
+                                                       date=new_flight.out_date)
 
         if created or self._positive_change(existing_flight=flight, new_flight=new_flight):
-            Changes.objects.create(prev_seats=flight.seats, to=flight)
+            Changes.objects.create(prev_seats=flight.business_seats, to=flight)
             self.email_service.add_flight(new_flight)
 
-        flight.seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
+        flight.business_seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
         flight.save()
 
     def _positive_change(self, existing_flight, new_flight):
@@ -42,7 +41,7 @@ class ResponseHandler(object):
         """
         if not existing_flight:
             return True
-        return new_flight.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.seats
+        return new_flight.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.business_seats
 
     def _handle_error(self, new_flight):
         ApiError.objects.get_or_create(

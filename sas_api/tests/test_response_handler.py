@@ -50,8 +50,7 @@ class TestResponseHandler(TestCase):
         assert flight.origin == r.origin
         assert flight.destination == r.destination
         assert flight.date == r.out_date
-        assert flight.seats == r.seats_in_cabin(CabinClass.BUSINESS)
-        assert flight.cabin == CabinClass.BUSINESS
+        assert flight.business_seats == r.seats_in_cabin(CabinClass.BUSINESS)
 
         assert Changes.objects.count() == 1
         changes = Changes.objects.first()
@@ -63,8 +62,7 @@ class TestResponseHandler(TestCase):
             origin='origin',
             destination='destination',
             date=datetime.date(2019, 10, 10),
-            seats=2,
-            cabin=CabinClass.BUSINESS,
+            business_seats=2,
         )
 
         r = Result(origin='origin',
@@ -86,8 +84,7 @@ class TestResponseHandler(TestCase):
         assert flight.origin == r.origin
         assert flight.destination == r.destination
         assert flight.date == r.out_date
-        assert flight.seats == r.seats_in_cabin(CabinClass.BUSINESS)
-        assert flight.cabin == CabinClass.BUSINESS
+        assert flight.business_seats == r.seats_in_cabin(CabinClass.BUSINESS)
 
         assert Changes.objects.count() == 1
         changes = Changes.objects.first()
@@ -101,8 +98,7 @@ class TestResponseHandler(TestCase):
             origin='origin',
             destination='destination',
             date=datetime.date(2019, 10, 10),
-            seats=2,
-            cabin=CabinClass.BUSINESS,
+            business_seats=2,
         )
 
         r = Result(origin='origin',
@@ -124,8 +120,7 @@ class TestResponseHandler(TestCase):
         assert flight.origin == r.origin
         assert flight.destination == r.destination
         assert flight.date == r.out_date
-        assert flight.seats == r.seats_in_cabin(CabinClass.BUSINESS)
-        assert flight.cabin == CabinClass.BUSINESS
+        assert flight.business_seats == r.seats_in_cabin(CabinClass.BUSINESS)
 
         assert Changes.objects.count() == 0
 
@@ -135,8 +130,7 @@ class TestResponseHandler(TestCase):
             origin='origin',
             destination='destination',
             date=datetime.date(2019, 10, 10),
-            seats=2,
-            cabin=CabinClass.BUSINESS,
+            business_seats=2,
         )
 
         r = Result(origin='origin',
@@ -153,7 +147,7 @@ class TestResponseHandler(TestCase):
         ResponseHandler(result_handler, self.email_service, self.log).execute()
 
         flight = Flight.objects.first()
-        assert flight.seats == r.seats_in_cabin(CabinClass.BUSINESS)
+        assert flight.business_seats == r.seats_in_cabin(CabinClass.BUSINESS)
 
         r2 = Result(origin='origin',
                     destination='destination',
@@ -174,8 +168,7 @@ class TestResponseHandler(TestCase):
         assert flight.origin == r2.origin
         assert flight.destination == r2.destination
         assert flight.date == r2.out_date
-        assert flight.seats == r2.seats_in_cabin(CabinClass.BUSINESS)
-        assert flight.cabin == CabinClass.BUSINESS
+        assert flight.business_seats == r2.seats_in_cabin(CabinClass.BUSINESS)
 
         assert Changes.objects.count() == 2
         changes = Changes.objects.all().order_by('ts').last()

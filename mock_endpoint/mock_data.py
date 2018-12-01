@@ -2,7 +2,6 @@ import datetime
 from collections import namedtuple
 
 from awards.models import Flight
-from sas_api.requester import CabinClass
 
 Key = namedtuple('Key', 'origin destination out_date')
 
@@ -14,8 +13,7 @@ def cph_pvg():
 
     prev_seats = Flight.objects.filter(origin='CPH',
                                        destination='PVG',
-                                       date=datetime.date(2019, 10, 2),
-                                       cabin=CabinClass.BUSINESS).first().seats
+                                       date=datetime.date(2019, 10, 2)).first().business_seats
     new_seats = prev_seats + 1
     cph_pvg = cph_pvg.replace('"avlSeats":10', '"avlSeats":{}'.format(new_seats))
     return cph_pvg
@@ -26,10 +24,9 @@ def arn_pvg():
 
     prev_seats = Flight.objects.filter(origin='ARN',
                                        destination='PVG',
-                                       date=datetime.date(2019, 10, 2),
-                                       cabin=CabinClass.BUSINESS)
+                                       date=datetime.date(2019, 10, 2))
     if prev_seats:
-        prev_seats = prev_seats.first().seats
+        prev_seats = prev_seats.first().business_seats
     else:
         prev_seats = 10
 
