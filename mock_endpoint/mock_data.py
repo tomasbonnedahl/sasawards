@@ -13,7 +13,11 @@ def cph_pvg():
 
     prev_seats = Flight.objects.filter(origin='CPH',
                                        destination='PVG',
-                                       date=datetime.date(2019, 10, 2)).first().business_seats
+                                       date=datetime.date(2019, 10, 2))
+    if prev_seats:
+        prev_seats = prev_seats.first().business_seats
+    else:
+        prev_seats = 10
     new_seats = prev_seats + 1
     cph_pvg = cph_pvg.replace('"avlSeats":10', '"avlSeats":{}'.format(new_seats))
     return cph_pvg

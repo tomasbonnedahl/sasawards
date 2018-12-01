@@ -12,7 +12,7 @@ Show flights
 <br>
 Changes (positive)
 {% for change in changes %}
-    <li>From {{ change.prev_seats }} to {{ change.to.seats }}
+    <li>From {{ change.prev_seats }} to {{ change.to.business_seats }}
         on {{ change.to.origin }}-{{ change.to.destination }} ({{ change.ts }})
     </li>
 {% endfor %}
