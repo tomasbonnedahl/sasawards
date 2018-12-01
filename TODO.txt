@@ -1,3 +1,4 @@
+- Set up a local dev config with 1 minute jobs and 1 second between calls, and one production - easy to flip
 - Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
 - Fix models to have bus, plus seats
 - Remove errors after a while
