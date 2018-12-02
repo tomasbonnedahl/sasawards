@@ -54,17 +54,17 @@ class ResultHandler(object):
         """
         :type result: Result
         """
+        if result is None:
+            self.errors.append(result)
+        elif result.error is not None:
+            self.errors.append(result)
+
         if not all([result.origin, result.destination, result.out_date]):
             result.origin = origin
             result.destination = destination
             result.out_date = out_date
 
-        if result is None:
-            self.errors.append(result)
-        elif result.error is not None:
-            self.errors.append(result)
-        else:
-            self.valid_results.append(result)
+        self.valid_results.append(result)
 
 
 class Requester(object):
