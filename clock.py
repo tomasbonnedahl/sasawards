@@ -25,7 +25,7 @@ def timed_job():
     # if worker.get_state() == 'idle':
 
 
-@sched.scheduled_job('interval', minutes=20)
+@sched.scheduled_job('interval', minutes=1)
 def keep_alive():
     requests.get('http://thawing-ravine-34523.herokuapp.com')
 

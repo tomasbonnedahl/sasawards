@@ -1,12 +1,14 @@
 - Set up a local dev config with 1 minute jobs and 1 second between calls, and one production - easy to flip
+    settings.py?
 - Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
-- Fix models to have bus, plus seats
 - Remove errors after a while
+    Job that removes them after a week, use ts?
 - Send e-mails regarding errors separately (separate job?)
+    Needs flag in db for e-mail sent? Can be scheduled differently from fetching data
+- Send e-mail by queueing it as a job
 - Do not add to queue if already processing/starting
 - Proper logging
 - Frequency of travelhacks, how often is data fetched
-- Send e-mail by queueing it as a job
 - Empty queue on startup/restart?
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Set up tmux
