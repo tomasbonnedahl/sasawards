@@ -7,13 +7,13 @@ MAX_DATE = '20191103'  # Inclusive, could be None
 DAYS_AHEAD = 340
 
 ORIGINS = [
-    'ARN',
-    # 'CPH'
+    # 'ARN',
+    'CPH'
 ]
 
 DESTINATIONS = [
-    # 'PVG',
-    'EWR',
+    'PVG',
+    # 'EWR',
     # 'NON'
 ]
 
