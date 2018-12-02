@@ -1,9 +1,11 @@
 - Set up a local dev config with 1 minute jobs and 1 second between calls, and one production - easy to flip
     settings.py?
+    Include base-url somehow
 - Start one separate job for each (origin, dst)?
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job
     Can one job post another job?
+- Fix psycopg2-binary, pip install -r req.txt
 - Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
     Seems to have more than enough, worth anyways?
 - Remove errors after a while
