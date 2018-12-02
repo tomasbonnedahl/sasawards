@@ -7,7 +7,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 sched = BackgroundScheduler()  # Use when used from wsgi.py
 
 
-@sched.scheduled_job('interval', minutes=5)
+@sched.scheduled_job('interval', minutes=4)
 def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
     # django.setup()  # Only used when in separate dyno?

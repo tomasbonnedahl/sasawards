@@ -62,7 +62,7 @@ class ResultHandler(object):
             result.destination = destination
             result.out_date = out_date
 
-        if result.error is None:
+        if result.error is not None:
             self.errors.append(result)
         else:
             self.valid_results.append(result)
