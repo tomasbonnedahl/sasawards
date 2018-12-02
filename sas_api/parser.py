@@ -51,15 +51,15 @@ class ResponseParser(object):
         return None
 
     def __seats_by_cabin(self, cabins):
-        d = defaultdict(int)
+        seats_by_cabin = defaultdict(int)
         for cabin_class_name, cabin_class_values in cabins.items():
             for sas_cabin_class_values in cabin_class_values.values():
                 products = sas_cabin_class_values['products']
                 for product_value in products.values():
                     for fare in product_value['fares']:
-                        if fare['avlSeats'] > d[cabin_class_name]:
-                            d[cabin_class_name] = fare['avlSeats']
-        return d
+                        if fare['avlSeats'] > seats_by_cabin[cabin_class_name]:
+                            seats_by_cabin[cabin_class_name] = fare['avlSeats']
+        return seats_by_cabin
 
     def __cabin_mapper(self, sas_cabin_name):
         # TODO: Shouldn't be in this class?

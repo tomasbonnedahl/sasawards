@@ -52,19 +52,20 @@ class ResultHandler(object):
 
     def add(self, origin, destination, out_date, result):
         """
-        :type result: Result
+        :type result: Result|None
         """
         if result is None:
-            self.errors.append(result)
-        elif result.error is not None:
-            self.errors.append(result)
+            result = Result(error="Unknown error, result was None")
 
         if not all([result.origin, result.destination, result.out_date]):
             result.origin = origin
             result.destination = destination
             result.out_date = out_date
 
-        self.valid_results.append(result)
+        if result.error is None:
+            self.errors.append(result)
+        else:
+            self.valid_results.append(result)
 
 
 class Requester(object):
