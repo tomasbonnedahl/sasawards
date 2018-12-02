@@ -14,11 +14,11 @@ class ResponseHandler(object):
     def execute(self):
         for flight in self.response.valid_results:
             self._handle_flight(flight)
-        self.email_service.send('Update from SAS Awards')
+        #self.email_service.send('Update from SAS Awards')
 
         for error in self.response.errors:
             self._handle_error(error)
-        self.email_service.send('Errors from SAS Awards')
+        #self.email_service.send('Errors from SAS Awards')
 
     def _handle_flight(self, new_flight):
         """
