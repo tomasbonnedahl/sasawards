@@ -7,15 +7,8 @@ from sas_api.response_handler import ResponseHandler
 
 def get_new_flight_data(log):
     config = create_config()
-    try:
-        requester = Requester(config.base_url, log)
-        response = FlightGetter(config, requester, ResponseParser(), log).execute()
-        email_service = EmailService()
-        ResponseHandler(response, email_service, log).execute()
-    except Exception as e:
-        s = 'ERROR: Exception recevied: {}'.format(e)
-        print(s)
-        log.info(s)
-        log.debug(s)
-        log.error(s)
+    requester = Requester(config.base_url, log)
+    response = FlightGetter(config, requester, ResponseParser(), log).execute()
+    email_service = EmailService()
+    ResponseHandler(response, email_service, log).execute()
 
