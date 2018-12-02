@@ -82,7 +82,7 @@ if 'DATABASE_URL' in os.environ:
     RQ_QUEUES = {
         'default': {
             'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
-            'DEFAULT_TIMEOUT': 500,
+            'DEFAULT_TIMEOUT': 5000,
         },
     }
 else:
