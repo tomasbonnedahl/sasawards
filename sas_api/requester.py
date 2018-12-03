@@ -52,11 +52,8 @@ class ResultHandler(object):
 
     def add(self, origin, destination, out_date, result):
         """
-        :type result: Result|None
+        :type result: Result
         """
-        if result is None:
-            result = Result(error="Unknown error, result was None")
-
         if not all([result.origin, result.destination, result.out_date]):
             result.origin = origin
             result.destination = destination
@@ -119,7 +116,8 @@ class FlightGetter(object):
                                                destination=dst,
                                                out_date=out_date)
             result = self.parser.parse(json_data)
-            self.result_handler.add(origin, dst, out_date, result)
+            if result:
+                self.result_handler.add(origin, dst, out_date, result)
 
             sleep(self.config.seconds + round(random(), 2))
 
