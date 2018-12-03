@@ -14,7 +14,8 @@ def send_email(subject, message):
 
 
 class EmailService(object):
-    def __init__(self):
+    def __init__(self, log):
+        self.log = log
         self.__email_messages = []
 
     def add_flight(self, new_flight):
@@ -34,8 +35,11 @@ class EmailService(object):
         ))
 
     def send(self, subject):
-        send_email(subject, "\n\n".join(self.__email_messages))
-        self.__email_messages = []  # Do not want to keep old messages once sent
+        try:
+            send_email(subject, "\n\n".join(self.__email_messages))
+            self.__email_messages = []  # Do not want to keep old messages once sent
+        except Exception as e:
+            self.log('Received exception in e-mail: {}'.format(e))
 
     def __email_message(self, new_flight):
         """

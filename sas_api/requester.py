@@ -129,10 +129,6 @@ class FlightGetter(object):
                                                out_date=out_date)
             result = self.parser.parse(json_data)
             if result:
-                s = 'Returning result: {}'.format(result)
-                print(s)
-                self.log.info(s)
-                self.log.debug(s)
                 self.result_handler.add(origin, dst, out_date, result)
 
             sleep(self.config.seconds + round(random(), 2))

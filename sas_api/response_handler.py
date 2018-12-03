@@ -14,19 +14,16 @@ class ResponseHandler(object):
     def execute(self):
         for flight in self.response.valid_results:
             self._handle_flight(flight)
-        #self.email_service.send('Update from SAS Awards')
+        self.email_service.send('Update from SAS Awards')
 
         for error in self.response.errors:
             self._handle_error(error)
-        #self.email_service.send('Errors from SAS Awards')
+        self.email_service.send('Errors from SAS Awards')
 
     def _handle_flight(self, new_flight):
         """
         :type new_flight: sas_api.requester.Result
         """
-        s = 'Looking at {}'.format(new_flight)
-        self.log.info(s)
-
         flight, created = Flight.objects.get_or_create(origin=new_flight.origin,
                                                        destination=new_flight.destination,
                                                        date=new_flight.out_date)
@@ -35,8 +32,6 @@ class ResponseHandler(object):
             Changes.objects.create(prev_seats=flight.business_seats, to=flight)
             self.email_service.add_flight(new_flight)
 
-        s = 'Setting {} bus seats'.format(new_flight.seats_in_cabin(CabinClass.BUSINESS))
-        self.log.info(s)
         flight.business_seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
         flight.plus_seats = new_flight.seats_in_cabin(CabinClass.PLUS)
         flight.save()

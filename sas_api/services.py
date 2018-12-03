@@ -9,6 +9,6 @@ def get_new_flight_data(log):
     config = create_config()
     requester = Requester(config.base_url, log)
     response = FlightGetter(config, requester, ResponseParser(), log).execute()
-    email_service = EmailService()
+    email_service = EmailService(log)
     ResponseHandler(response, email_service, log).execute()
 
