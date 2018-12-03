@@ -34,6 +34,7 @@ class ResponseParser(object):
                 # Only interested in direct flights
                 continue
 
+            print('flight id: {}'.format(flight_id.get('id')))
             start_date = flight_id['startTimeInLocal'].split('T')[0]
             out_date = datetime.strptime(start_date, "%Y-%m-%d").date()
 
