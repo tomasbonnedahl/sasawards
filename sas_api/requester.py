@@ -44,6 +44,14 @@ class Result(object):
         """
         return self.seats_by_cabin_class[cabin_class]
 
+    def __str__(self):
+        return "{}-{} at {} offers {} seats".format(
+            self.origin,
+            self.destination,
+            self.out_date,
+            self.seats_by_cabin_class[CabinClass.BUSINESS]
+        )
+
 
 class ResultHandler(object):
     def __init__(self):
@@ -117,6 +125,10 @@ class FlightGetter(object):
                                                out_date=out_date)
             result = self.parser.parse(json_data)
             if result:
+                s = 'Returning result: {}'.format(result)
+                print(s)
+                self.log.info(s)
+                self.log.debug(s)
                 self.result_handler.add(origin, dst, out_date, result)
 
             sleep(self.config.seconds + round(random(), 2))
