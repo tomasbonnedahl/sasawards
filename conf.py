@@ -1,7 +1,7 @@
 # TODO: Add these to the database and have an interface for it?
 
-MIN_DATE = '20191002'
-MAX_DATE = '20191003'  # Inclusive, could be None
+MIN_DATE = '20190401'
+MAX_DATE = '20191004'  # Inclusive, could be None
 # MAX_DATE=None
 
 DAYS_AHEAD = 340
