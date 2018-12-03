@@ -86,12 +86,14 @@ class Requester(object):
         :type destination: str
         :type out_date: datetime.date
         """
+        standard = "&adt=2&chd=0&inf=0&yth=0&bookingFlow=points&pos=no&channel=web&displayType=upsell"
+
         value_by_api_keyword = {
             'from=': origin,
             'to=': destination,
-            'outDate=': out_date.strftime("%Y%m%d")
+            'outDate=': out_date.strftime("%Y%m%d"),
         }
-        return "&".join([str(k) + str(v) for k, v in value_by_api_keyword.items()])
+        return "&".join([str(k) + str(v) for k, v in value_by_api_keyword.items()]) + standard
 
     def request(self, origin, destination, out_date):
         params = self._params(origin, destination, out_date)
