@@ -51,12 +51,15 @@ class ResponseParser(object):
         return None
 
     def __seats_by_cabin(self, cabins):
+        print('cabins: {}'.format(cabins.keys()))
         seats_by_cabin = defaultdict(int)
         for cabin_class_name, cabin_class_values in cabins.items():
+            print('cabin_class_name: {}'.format(cabin_class_name))
             for sas_cabin_class_values in cabin_class_values.values():
                 products = sas_cabin_class_values['products']
                 for product_value in products.values():
                     for fare in product_value['fares']:
+                        print("fare['avlSeats']: {}".format(fare['avlSeats']))
                         if fare['avlSeats'] > seats_by_cabin[cabin_class_name]:
                             seats_by_cabin[cabin_class_name] = fare['avlSeats']
         print("seats_by_cabin: {}".format(seats_by_cabin))
