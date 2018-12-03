@@ -45,11 +45,13 @@ class Result(object):
         return self.seats_by_cabin_class[cabin_class]
 
     def __str__(self):
-        return "{}-{} at {} offers {} seats".format(
+        return "{}-{} at {} offers {}/{}/{} seats".format(
             self.origin,
             self.destination,
             self.out_date,
-            self.seats_by_cabin_class[CabinClass.BUSINESS]
+            self.seats_by_cabin_class[CabinClass.BUSINESS],
+            self.seats_by_cabin_class[CabinClass.PLUS],
+            self.seats_by_cabin_class[CabinClass.GO],
         )
 
 
