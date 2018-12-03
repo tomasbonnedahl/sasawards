@@ -59,6 +59,7 @@ class ResponseParser(object):
                     for fare in product_value['fares']:
                         if fare['avlSeats'] > seats_by_cabin[cabin_class_name]:
                             seats_by_cabin[cabin_class_name] = fare['avlSeats']
+        print("seats_by_cabin: {}".format(seats_by_cabin))
         return seats_by_cabin
 
     def __cabin_mapper(self, sas_cabin_name):
