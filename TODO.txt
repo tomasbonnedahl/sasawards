@@ -1,7 +1,8 @@
 - Set up a local dev config with 1 minute jobs and 1 second between calls, and one production - easy to flip
     settings.py?
     Include base-url somehow
-    Emails are sent when running local, fix
+    Emails are sent when running local, make it configurable
+- Remove existing flights from db with business seats that now have zero seats
 - Start one separate job for each (origin, dst)?
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job

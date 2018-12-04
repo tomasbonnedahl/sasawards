@@ -15,7 +15,6 @@ DESTINATIONS = [
     'HKG',
     # 'EWR',
     'SFO',
-    'SFO',
     'NRT',
     'LAX',
 ]
