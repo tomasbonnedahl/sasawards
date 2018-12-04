@@ -1,20 +1,23 @@
 # TODO: Add these to the database and have an interface for it?
 
 MIN_DATE = '20191001'
-MAX_DATE = '20191115'  # Inclusive, could be None
-# MAX_DATE=None
+# MAX_DATE = '20191115'  # Inclusive, could be None
+MAX_DATE=None
 
-DAYS_AHEAD = 340
+DAYS_AHEAD = 335
 
 ORIGINS = [
     'ARN',
-    # 'CPH'
+    'CPH',
 ]
 
 DESTINATIONS = [
-    # 'PVG',
-    'EWR',
-    # 'NON'
+    'HKG',
+    # 'EWR',
+    'SFO',
+    'SFO',
+    'NRT',
+    'LAX',
 ]
 
-SECONDS_BETWEEN_REQUESTS = 10
+SECONDS_BETWEEN_REQUESTS = 5
