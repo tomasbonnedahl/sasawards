@@ -1,16 +1,30 @@
 import os
 
+import sendgrid
 from django.conf import settings
 from django.core.mail import send_mail
+from sendgrid.helpers.mail import *
 
 from sas_api.requester import CabinClass
 
 
+# def send_email(subject, message):
+#     message = message
+#     email_from = settings.EMAIL_HOST_USER
+#     recipient_list = [os.environ['EMAIL_HOST_USER'], ]
+#     send_mail(subject, message, email_from, recipient_list)
+
+
 def send_email(subject, message):
-    message = message
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [os.environ['EMAIL_HOST_USER'], ]
-    send_mail(subject, message, email_from, recipient_list)
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email("seats@sasawards.com")
+    to_email = Email("bonnedahl@gmail.com")  # TODO: Add to DB
+    content = Content("text/plain", message)
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
 
 
 class EmailService(object):
