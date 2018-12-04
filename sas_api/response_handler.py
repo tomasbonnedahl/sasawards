@@ -18,7 +18,7 @@ class ResponseHandler(object):
 
         for error in self.response.errors:
             self._handle_error(error)
-        self.email_service.send('Errors from SAS Awards')
+        # self.email_service.send('Errors from SAS Awards')
 
     def _handle_flight(self, new_flight):
         """
