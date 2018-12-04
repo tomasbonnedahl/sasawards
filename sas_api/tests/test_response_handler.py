@@ -11,7 +11,7 @@ from sas_api.response_handler import ResponseHandler
 class DummyEmailService(object):
     def __init__(self, log):
         pass
-    
+
     def add_flight(self, new_flight):
         pass
 

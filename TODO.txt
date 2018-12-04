@@ -1,6 +1,7 @@
 - Set up a local dev config with 1 minute jobs and 1 second between calls, and one production - easy to flip
     settings.py?
     Include base-url somehow
+    Emails are sent when running local, fix
 - Start one separate job for each (origin, dst)?
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job
@@ -13,9 +14,9 @@
 - Do not add to queue if already processing/starting
 - Proper logging
 - Frequency of travelhacks, how often is data fetched
+    Not in the public repo
 - Empty queue on startup/restart?
 - Add more to parsing, do a few calls to API and get as many variants as possible
-- Set up tmux
 - Fix psycopg2-binary, pip install -r req.txt
 - Handle plus seats
 - Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
