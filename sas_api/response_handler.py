@@ -60,4 +60,4 @@ class ResponseHandler(object):
             date=new_flight.out_date,
             error_str=new_flight.error
         )
-        self.email_service.add_error(new_flight)
+        # self.email_service.add_error(new_flight)
