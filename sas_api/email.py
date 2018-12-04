@@ -21,10 +21,7 @@ def send_email(subject, message):
     to_email = Email("bonnedahl@gmail.com")  # TODO: Add to DB
     content = Content("text/plain", message)
     mail = Mail(from_email, subject, to_email, content)
-    response = sg.client.mail.send.post(request_body=mail.get())
-    print(response.status_code)
-    print(response.body)
-    print(response.headers)
+    sg.client.mail.send.post(request_body=mail.get())
 
 
 class EmailService(object):
