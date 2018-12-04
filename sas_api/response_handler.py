@@ -45,7 +45,15 @@ class ResponseHandler(object):
             return True
         return new_flight.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.business_seats
 
+    @property
+    def __ignored_errors(self):
+        return ['225034', '225044', '225036']
+
     def _handle_error(self, new_flight):
+        # Only save unexpected errors - not where there are no flights
+        if any(error_code in new_flight.error for error_code in self.__ignored_errors):
+            return
+
         ApiError.objects.get_or_create(
             origin=new_flight.origin,
             destination=new_flight.destination,

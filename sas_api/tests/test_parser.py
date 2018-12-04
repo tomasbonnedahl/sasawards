@@ -77,7 +77,6 @@ class TestParser(TestCase):
     def test_date_parser(self):
         date_str = "2019-10-02T23:30:00.000-04:00"
         start_date = date_str.split('T')[0]
-        print(start_date)
         out_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
         assert out_date == datetime.date(2019, 10, 2)
 
@@ -98,3 +97,8 @@ class TestParser(TestCase):
         assert result.seats_in_cabin(CabinClass.BUSINESS) == 0
         assert result.seats_in_cabin(CabinClass.PLUS) == 6
         assert result.seats_in_cabin(CabinClass.GO) == 9
+
+    def test_error_codes(self):
+        error_str = '''{'errors': [{'errorCode': '225036', 'errorMessage': "Unfortunately, we can't seem to find anything that matches what you're looking for. Please refine your search."}], 'offerId': 'ece73624-3b0a-4ab9-8530-d7cf61329eb4_2018-12-04'}'''
+        codes = ['225034', '225044', '225036']
+        assert any(each in error_str for each in codes) is True
