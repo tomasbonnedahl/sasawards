@@ -9,7 +9,9 @@ from sas_api.response_handler import ResponseHandler
 
 
 class DummyEmailService(object):
-    # TODO: Mock
+    def __init__(self, log):
+        pass
+    
     def add_flight(self, new_flight):
         pass
 
@@ -23,7 +25,7 @@ class DummyEmailService(object):
 class TestResponseHandler(TestCase):
     def setUp(self):
         self.log = logging
-        self.email_service = EmailService()
+        self.email_service = EmailService(self.log)
 
     def tearDown(self):
         Flight.objects.all().delete()

@@ -1,6 +1,3 @@
-- Always 9 seats??
-- Fix better e-mail service
-- Fix parser, only add if not None from parser
 - Set up a local dev config with 1 minute jobs and 1 second between calls, and one production - easy to flip
     settings.py?
     Include base-url somehow
@@ -8,9 +5,6 @@
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job
     Can one job post another job?
-- Fix psycopg2-binary, pip install -r req.txt
-- Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
-    Seems to have more than enough, worth anyways?
 - Remove errors after a while
     Job that removes them after a week, use ts?
 - Send e-mails regarding errors separately (separate job?)
@@ -22,7 +16,10 @@
 - Empty queue on startup/restart?
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Set up tmux
+- Fix psycopg2-binary, pip install -r req.txt
 - Handle plus seats
+- Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
+    Seems to have more than enough, worth anyways?
 - Add origin, dest, dates to db and have a way to set them from a view (django superuser?)
 - Run tests from PyCharm, works with python manage.py test (test_response_handler doesn't work)
 - Add a frontend
