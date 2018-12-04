@@ -36,8 +36,9 @@ class EmailService(object):
 
     def send(self, subject):
         try:
-            send_email(subject, "\n\n".join(self.__email_messages))
-            self.__email_messages = []  # Do not want to keep old messages once sent
+            if self.__email_messages:
+                send_email(subject, "\n\n".join(self.__email_messages))
+                self.__email_messages = []  # Do not want to keep old messages once sent
         except Exception as e:
             self.log('Received exception in e-mail: {}'.format(e))
 
