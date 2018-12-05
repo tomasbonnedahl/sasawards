@@ -9,8 +9,8 @@ def index(request):
 
 
 def show_seats_and_changes(request):
-    flights = Flight.objects.all()
-    changes = Changes.objects.all()
+    flights = Flight.objects.all().order_by('-ts')
+    changes = Changes.objects.all().order_by('-ts')
     return render(request, "flights.html", {"flights": flights,
                                             "changes": changes,
                                             })
