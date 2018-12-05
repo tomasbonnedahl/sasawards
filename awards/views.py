@@ -11,8 +11,10 @@ def index(request):
 def show_seats_and_changes(request):
     flights = Flight.objects.all()
     changes = Changes.objects.all()
-    errors = ApiError.objects.all()
     return render(request, "flights.html", {"flights": flights,
                                             "changes": changes,
-                                            "errors": errors,
                                             })
+
+def errors(requests):
+    errors = ApiError.objects.all().order_by('-ts')
+    return render(requests, "errors.html", {"errors": errors})

@@ -17,12 +17,5 @@ Changes (positive)
     </li>
 {% endfor %}
 
-<br>
-Errors
-{% for error in errors %}
-    <li>({{ change.ts }}) {{ error.origin }}-{{ error.destination }} at {{ error.date }} {{ error.error_str }}
-    </li>
-{% endfor %}
-
 </body>
 </html>

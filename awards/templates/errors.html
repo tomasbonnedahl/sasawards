@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+Errors
+{% for error in errors %}
+    <li>{{ error.date }} {{ error.origin }}-{{ error.destination }} ({{ error.ts }})
+    </li>
+{% endfor %}
+</body>
+</html>
