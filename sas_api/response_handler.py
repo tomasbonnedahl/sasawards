@@ -36,6 +36,10 @@ class ResponseHandler(object):
             flight.business_seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
             flight.plus_seats = new_flight.seats_in_cabin(CabinClass.PLUS)
             flight.save()
+        else:
+            Flight.objects.filter(origin=new_flight.origin,
+                                  destination=new_flight.destination,
+                                  date=new_flight.out_date).delete()
 
     def _positive_change(self, existing_flight, new_flight):
         """

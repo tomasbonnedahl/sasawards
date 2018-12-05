@@ -176,3 +176,28 @@ class TestResponseHandler(TestCase):
         changes = Changes.objects.all().order_by('ts').last()
         assert changes.prev_seats == 3
         assert changes.to == flight
+
+    def test_delete_existing_if_zero_seats(self):
+        assert Flight.objects.count() == 0
+        Flight.objects.create(
+            origin='origin',
+            destination='destination',
+            date=datetime.date(2019, 10, 10),
+            business_seats=2,
+        )
+
+        r = Result(origin='origin',
+                   destination='destination',
+                   out_date=datetime.date(2019, 10, 10))
+        r.add(CabinClass.BUSINESS, 0)  # New value is 0 seats
+
+        result_handler = ResultHandler()
+        result_handler.add(origin='origin',
+                           destination='destination',
+                           out_date=datetime.date(2019, 10, 10),
+                           result=r)
+
+        ResponseHandler(result_handler, self.email_service, self.log).execute()
+
+        assert Flight.objects.count() == 0
+        assert Changes.objects.count() == 0
