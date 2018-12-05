@@ -3,7 +3,6 @@
     Include base-url somehow
     Emails are sent when running local, make it configurable
     Should also speed up tests as delay per requests (sleep) would be close to zero in a dev/test env)
-- Error view, displays all errors
 - Start one separate job for each (origin, dst)?
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job

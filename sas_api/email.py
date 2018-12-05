@@ -4,16 +4,13 @@ import sendgrid
 from sendgrid.helpers.mail import *
 
 from sas_api.requester import CabinClass
-
-
-# def send_email(subject, message):
-#     message = message
-#     email_from = settings.EMAIL_HOST_USER
-#     recipient_list = [os.environ['EMAIL_HOST_USER'], ]
-#     send_mail(subject, message, email_from, recipient_list)
+from sasawards import settings
 
 
 def send_email(subject, message):
+    if not settings.SEND_EMAILS:
+        return
+
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     from_email = Email("seats@sasawards.com")
     to_email = Email("bonnedahl@gmail.com")  # TODO: Add to DB

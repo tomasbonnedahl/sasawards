@@ -1,4 +1,5 @@
 # TODO: Add these to the database and have an interface for it?
+from sasawards import settings
 
 MIN_DATE = '20191001'
 # MAX_DATE = '20191115'  # Inclusive, could be None
@@ -19,4 +20,4 @@ DESTINATIONS = [
     'LAX',
 ]
 
-SECONDS_BETWEEN_REQUESTS = 5
+SECONDS_BETWEEN_REQUESTS = settings.SECONDS_BETWEEN

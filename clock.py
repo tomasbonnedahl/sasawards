@@ -4,10 +4,12 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # sched = BlockingScheduler()  # Use when in separate clock dyno
+from sasawards.settings import MINUTE_INTERVAL_FLIGHT_FETCH
+
 sched = BackgroundScheduler()  # Use when used from wsgi.py
 
 
-@sched.scheduled_job('interval', minutes=60)
+@sched.scheduled_job('interval', minutes=MINUTE_INTERVAL_FLIGHT_FETCH)
 def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
     # django.setup()  # Only used when in separate dyno?
