@@ -159,6 +159,6 @@ if 'RUNNING_DEV' in os.environ:
     SEND_EMAILS = False
 else:
     # Heroku
-    MINUTE_INTERVAL_FLIGHT_FETCH = 60
+    MINUTE_INTERVAL_FLIGHT_FETCH = 80
     SECONDS_BETWEEN = 5
     SEND_EMAILS = True
