@@ -2,7 +2,7 @@ import datetime
 import logging
 from unittest import TestCase
 
-from awards.models import Flight, Changes
+from awards.models import Flight, Changes, ApiError
 from sas_api.email import EmailService
 from sas_api.requester import Result, CabinClass, ResultHandler
 from sas_api.response_handler import ResponseHandler
@@ -201,3 +201,33 @@ class TestResponseHandler(TestCase):
 
         assert Flight.objects.count() == 0
         assert Changes.objects.count() == 0
+
+    def test_not_saving_ignored_errors(self):
+        assert ApiError.objects.count() == 0
+
+        ignored_error = '''{'errors': [{'errorCode': '225036', 'errorMessage': "Unfortunately, we can't seem to find anything that matches what you're looking for. Please refine your search."}], 'offerId': 'ece73624-3b0a-4ab9-8530-d7cf61329eb4_2018-12-04'}'''
+        unknwon_error = '''{'errors': [{'errorCode': '666666', 'errorMessage': "Unfortunately, we can't seem to find anything that matches what you're looking for. Please refine your search."}], 'offerId': 'ece73624-3b0a-4ab9-8530-d7cf61329eb4_2018-12-04'}'''
+
+        error_expected = [
+            # error, expected rows
+            (ignored_error, 0),
+            (unknwon_error, 1),
+        ]
+
+        for error, expected_num_rows in error_expected:
+            r = Result(origin='origin',
+                       destination='destination',
+                       out_date=datetime.date(2019, 10, 10),
+                       error=error,
+                       )
+
+            result_handler = ResultHandler()
+            result_handler.add(origin='origin',
+                               destination='destination',
+                               out_date=datetime.date(2019, 10, 10),
+                               result=r
+                               )
+
+            ResponseHandler(result_handler, self.email_service, self.log).execute()
+
+            assert ApiError.objects.count() == expected_num_rows
