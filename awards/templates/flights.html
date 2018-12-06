@@ -21,6 +21,8 @@
 </head>
 <body>
 <h1>Seats</h1>
+<div class="container">
+<input class="form-control" id="myInput" type="text" placeholder="Search..">
 <table class="table table-striped">
     <thead>
     <tr>
@@ -30,7 +32,7 @@
         <th scope="col">Seen</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="myTable">
 
     {% for flight in flights %}
         <tr>
@@ -42,7 +44,7 @@
     {% endfor %}
     </tbody>
 </table>
-
+</div>
 <br>
 <h1>Changes</h1>
 <table class="table table-striped">
@@ -76,5 +78,17 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
 </body>
 </html>
