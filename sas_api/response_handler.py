@@ -51,7 +51,7 @@ class ResponseHandler(object):
 
     @property
     def __ignored_errors(self):
-        return ['225034', '225044', '225036']
+        return ['225034', '225044', '225036', '225046', '225014']
 
     def _handle_error(self, new_flight):
         # Only save unexpected errors - not where there are no flights
