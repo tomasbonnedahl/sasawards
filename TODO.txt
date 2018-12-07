@@ -1,20 +1,16 @@
-- Set up a local dev config with 1 minute jobs and 1 second between calls, and one production - easy to flip
-    settings.py?
-    Include base-url somehow
+- Filtering like t-hacks, destination and duration
+- ISO dates
+- Do not add to queue if already processing/starting
+- Empty queue on startup/restart?
+- Remove errors after a while
+    Job that removes them after a week, use ts?
 - Start one separate job for each (origin, dst)?
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job
     Can one job post another job?
-- Remove errors after a while
-    Job that removes them after a week, use ts?
 - Send e-mails regarding errors separately (separate job?)
     Needs flag in db for e-mail sent? Can be scheduled differently from fetching data
 - Send e-mail by queueing it as a job
-- Do not add to queue if already processing/starting
-- Proper logging
-- Frequency of travelhacks, how often is data fetched
-    Not in the public repo
-- Empty queue on startup/restart?
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Fix psycopg2-binary, pip install -r req.txt
 - Handle plus seats
@@ -24,7 +20,5 @@
 - Run tests from PyCharm, works with python manage.py test (test_response_handler doesn't work)
 - Add a frontend
     - Possible to update the configuration
-    - See timestamps
-    - See available flights
     - Do trend analysis on when seats are released
 - What is openflight used for in travelhacks?
