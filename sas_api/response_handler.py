@@ -58,10 +58,10 @@ class ResponseHandler(object):
         if any(error_code in new_flight.error for error_code in self.__ignored_errors):
             return
 
-        ApiError.objects.get_or_create(
-            origin=new_flight.origin,
-            destination=new_flight.destination,
-            date=new_flight.out_date,
-            error_str=new_flight.error
-        )
+        # ApiError.objects.get_or_create(
+        #     origin=new_flight.origin,
+        #     destination=new_flight.destination,
+        #     date=new_flight.out_date,
+        #     error_str=new_flight.error
+        # )
         # self.email_service.add_error(new_flight)
