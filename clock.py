@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import requests
@@ -9,7 +10,7 @@ from sasawards.settings import MINUTE_INTERVAL_FLIGHT_FETCH
 sched = BackgroundScheduler()  # Use when used from wsgi.py
 
 
-@sched.scheduled_job('interval', minutes=MINUTE_INTERVAL_FLIGHT_FETCH)
+@sched.scheduled_job('interval', minutes=MINUTE_INTERVAL_FLIGHT_FETCH, start_date=datetime.datetime.now())
 def timed_job():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sasawards.settings")
     # django.setup()  # Only used when in separate dyno?
