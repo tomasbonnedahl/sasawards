@@ -1,5 +1,5 @@
+- Start job immidiately after start, and then wait
 - Filtering like t-hacks, destination and duration
-- ISO dates
 - Do not add to queue if already processing/starting
 - Empty queue on startup/restart?
 - Remove errors after a while
