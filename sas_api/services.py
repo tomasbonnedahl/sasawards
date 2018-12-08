@@ -10,11 +10,11 @@ from sas_api.utils import calculate_max_date
 
 
 def expected_duration_in_min():
-    # ORIGIN * DESTINATION * 2 * (MAX_DATE - START_DATE) * (SECONDS_BETWEEN_REQUESTS + 0.5)
+    # ORIGIN * DESTINATION * 2 * (MAX_DATE - START_DATE) * (SECONDS_BETWEEN_REQUESTS + 0.5 + 1.5 SEC REQUEST)
     max_date = calculate_max_date(MAX_DATE, DAYS_AHEAD)
     min_date = datetime.datetime.strptime(MIN_DATE, "%Y%m%d").date()
     days = (max_date - min_date).days
-    return round(len(ORIGINS) * len(DESTINATIONS) * 2 * days * (SECONDS_BETWEEN_REQUESTS + 0.5) / 60.0)
+    return round(len(ORIGINS) * len(DESTINATIONS) * 2 * days * (SECONDS_BETWEEN_REQUESTS + 0.5 + 1.5) / 60.0)
 
 
 def get_new_flight_data(log):
