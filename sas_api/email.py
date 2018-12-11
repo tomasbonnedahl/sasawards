@@ -11,12 +11,15 @@ def send_email(subject, message):
     if not settings.SEND_EMAILS:
         return
 
-    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-    from_email = Email("seats@sasawards.com")
-    to_email = Email("bonnedahl@gmail.com")  # TODO: Add to DB
-    content = Content("text/plain", message)
-    mail = Mail(from_email, subject, to_email, content)
-    sg.client.mail.send.post(request_body=mail.get())
+    for to in ["bonnedahl@gmail.com",
+               "cassonlucy@gmail.com",
+               "josefin@backman.se"]:
+        sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+        from_email = Email("seats@sasawards.com")
+        to_email = Email(to)
+        content = Content("text/plain", message)
+        mail = Mail(from_email, subject, to_email, content)
+        sg.client.mail.send.post(request_body=mail.get())
 
 
 class EmailService(object):
