@@ -1,3 +1,6 @@
+- Link in e-mail (+html?)
+- E-mails in db
+- Unregister e-mail
 - Start job immidiately after start, and then wait
 - Filtering like t-hacks, destination and duration
 - Do not add to queue if already processing/starting
