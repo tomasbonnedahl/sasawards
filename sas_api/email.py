@@ -13,8 +13,8 @@ def send_email(subject, message):
         return
 
     for to in ["bonnedahl@gmail.com",
-               # "cassonlucy@gmail.com",
-               # "josefin@backman.se",
+               "cassonlucy@gmail.com",
+               "josefin@backman.se",
                ]:
         sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email("seats@sasawards.com")
