@@ -14,7 +14,7 @@ class ResponseHandler(object):
     def execute(self):
         for flight in self.response.valid_results:
             self._handle_flight(flight)
-        self.email_service.send('Update from SAS Awards')
+        self.email_service.send('New seats found')
 
         for error in self.response.errors:
             self._handle_error(error)
