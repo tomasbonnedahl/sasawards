@@ -1,6 +1,10 @@
-- Link in e-mail (+html?)
-- E-mails in db
+- E-mail addresses in db instead of in code
 - Unregister e-mail
+    - Add one unique hash for each user/e-mail and include that in the unreg link (GET/POST problem or urls.py?)
+        - Django access token
+        - We know it's a valid unregister if it includes that link
+- Each address can subscribe to destinations (via the site)
+- Use render_to_string(.html, {x: y}) instead of before, after, etc.
 - Start job immidiately after start, and then wait
 - Filtering like t-hacks, destination and duration
 - Do not add to queue if already processing/starting
