@@ -15,6 +15,7 @@ def send_email(subject, message):
     for to in ["bonnedahl@gmail.com",
                "cassonlucy@gmail.com",
                "josefin@backman.se",
+               "t.bonnedahl@gmail.com"
                ]:
         sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email("seats@sasawards.com")
