@@ -1,3 +1,4 @@
+- Change URL at heroku
 - E-mail addresses in db instead of in code
 - Unregister e-mail
     - Add one unique hash for each user/e-mail and include that in the unreg link (GET/POST problem or urls.py?)

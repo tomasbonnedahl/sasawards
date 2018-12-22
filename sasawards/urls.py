@@ -13,11 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
 import awards.views
 import mock_endpoint.views
+from sasawards import settings
 
 urlpatterns = [
     path("", awards.views.index, name="index"),
@@ -26,4 +28,4 @@ urlpatterns = [
     path("mock/", mock_endpoint.views.mock, name="mock"),
     path('admin/', admin.site.urls),
     path('django-rq/', include('django_rq.urls'))
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
