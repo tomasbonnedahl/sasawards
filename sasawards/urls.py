@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
@@ -22,10 +23,11 @@ import mock_endpoint.views
 from sasawards import settings
 
 urlpatterns = [
-    path("", awards.views.index, name="index"),
-    path("flights/", awards.views.show_seats_and_changes, name="show_seats_and_changes"),
-    path("errors/", awards.views.errors, name="errors"),
-    path("mock/", mock_endpoint.views.mock, name="mock"),
-    path('admin/', admin.site.urls),
-    path('django-rq/', include('django_rq.urls'))
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+                  path("", awards.views.index, name="index"),
+                  path("flights/", awards.views.show_seats_and_changes, name="show_seats_and_changes"),
+                  path("errors/", awards.views.errors, name="errors"),
+                  path("mock/", mock_endpoint.views.mock, name="mock"),
+                  path('admin/', admin.site.urls),
+                  path('django-rq/', include('django_rq.urls')),
+                  url(r'^unsubscribe/(?P<token>[\w.:\-_=]+)/$', awards.views.unsubscribe),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

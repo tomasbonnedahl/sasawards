@@ -13,7 +13,7 @@ def send_email(subject, message):
         return
 
     for to in ["bonnedahl@gmail.com",
-               "cassonlucy@gmail.com",
+               "cassonlucy@gmail.com",  # TODO: Filer on is_active
                "josefin@backman.se",
                "t.bonnedahl@gmail.com"
                ]:
