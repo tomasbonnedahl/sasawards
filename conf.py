@@ -3,7 +3,7 @@ from sasawards import settings
 
 MIN_DATE = '20191001'
 # MAX_DATE = '20191115'  # Inclusive, could be None
-MAX_DATE=None
+MAX_DATE = None
 
 DAYS_AHEAD = 335
 

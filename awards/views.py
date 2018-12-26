@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from django.template.loader import render_to_string
 
 from awards.models import Flight, Changes, ApiError
-from awards.unsubscribe import user_from_token, unsubscribe_user
+from awards.unsubscribe import user_from_token, unsubscribe_user, unsubscribe_url
 
 
 @login_required
@@ -16,7 +18,7 @@ def unsubscribe(request, token):
     if user is None:
         return HttpResponse('Unknown user'.format())
     unsubscribe_user(user)
-    return HttpResponse('Unsubscribed: {}'.format(user.email))
+    return HttpResponse('{} un-subscribed'.format(user.email))
 
 
 def show_seats_and_changes(request):

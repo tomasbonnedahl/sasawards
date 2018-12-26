@@ -1,17 +1,15 @@
-- Change URL at heroku
-- E-mail addresses in db instead of in code
-- Unregister e-mail
-    - Add one unique hash for each user/e-mail and include that in the unreg link (GET/POST problem or urls.py?)
-        - Django access token
-        - We know it's a valid unregister if it includes that link
+- Add e-mail addresses to prod db
+- Add 127.0.0.1 and https://..heroku.com as host addresses in settings.py depending on where it's run
 - Each address can subscribe to destinations (via the site)
-- Use render_to_string(.html, {x: y}) instead of before, after, etc.
-- Start job immidiately after start, and then wait
-- Filtering like t-hacks, destination and duration
+    - Each airport code listed in db as name together with type, either origin or destination
+    - Also add if active origin/dest and fetch those from db instead of in code (move in conf to db)
+- Filtering like t-hacks, destination and duration on site
+- Set alerts on specific destinations
 - Do not add to queue if already processing/starting
 - Empty queue on startup/restart?
 - Remove errors after a while
     Job that removes them after a week, use ts?
+- Change URL at heroku
 - Start one separate job for each (origin, dst)?
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job

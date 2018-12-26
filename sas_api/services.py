@@ -1,6 +1,6 @@
 from conf import ORIGINS, DESTINATIONS, MAX_DATE, DAYS_AHEAD, SECONDS_BETWEEN_REQUESTS, MIN_DATE
 from sas_api.config import create_config
-from sas_api.email import EmailService
+from awards.email import EmailService
 from sas_api.parser import ResponseParser
 from sas_api.requester import FlightGetter, Requester
 from sas_api.response_handler import ResponseHandler

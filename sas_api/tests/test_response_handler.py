@@ -3,7 +3,7 @@ import logging
 from unittest import TestCase
 
 from awards.models import Flight, Changes, ApiError
-from sas_api.email import EmailService
+from awards.email import EmailService
 from sas_api.requester import Result, CabinClass, ResultHandler
 from sas_api.response_handler import ResponseHandler
 
@@ -230,4 +230,4 @@ class TestResponseHandler(TestCase):
 
             ResponseHandler(result_handler, self.email_service, self.log).execute()
 
-            assert ApiError.objects.count() == expected_num_rows
+            assert ApiError.objects.count() == expected_num_rows, "Act: {}".format(ApiError.objects.count())

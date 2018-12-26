@@ -12,56 +12,56 @@ class ResponseHandler(object):
         self.email_service = email_service
 
     def execute(self):
-        for flight in self.response.valid_results:
-            self._handle_flight(flight)
+        for result in self.response.valid_results:
+            self._handle_result(result)
         self.email_service.send('New seats found')
 
         for error in self.response.errors:
             self._handle_error(error)
         # self.email_service.send('Errors from SAS Awards')
 
-    def _handle_flight(self, new_flight):
+    def _handle_result(self, result):
         """
-        :type new_flight: sas_api.requester.Result
+        :type result: sas_api.requester.Result
         """
-        if new_flight.seats_in_cabin(CabinClass.BUSINESS):
-            flight, created = Flight.objects.get_or_create(origin=new_flight.origin,
-                                                           destination=new_flight.destination,
-                                                           date=new_flight.out_date)
+        if result.seats_in_cabin(CabinClass.BUSINESS):
+            flight, created = Flight.objects.get_or_create(origin=result.origin,
+                                                           destination=result.destination,
+                                                           date=result.out_date)
 
-            if created or self._positive_change(existing_flight=flight, new_flight=new_flight):
+            if created or self._positive_change(existing_flight=flight, result=result):
                 Changes.objects.create(prev_seats=flight.business_seats, to=flight)
-                self.email_service.add_flight(new_flight)
+                self.email_service.add_result(result)
 
-            flight.business_seats = new_flight.seats_in_cabin(CabinClass.BUSINESS)
-            flight.plus_seats = new_flight.seats_in_cabin(CabinClass.PLUS)
+            flight.business_seats = result.seats_in_cabin(CabinClass.BUSINESS)
+            flight.plus_seats = result.seats_in_cabin(CabinClass.PLUS)
             flight.save()
         else:
-            Flight.objects.filter(origin=new_flight.origin,
-                                  destination=new_flight.destination,
-                                  date=new_flight.out_date).delete()
+            Flight.objects.filter(origin=result.origin,
+                                  destination=result.destination,
+                                  date=result.out_date).delete()
 
-    def _positive_change(self, existing_flight, new_flight):
+    def _positive_change(self, existing_flight, result):
         """
-        :type new_flight: sas_api.requester.Result
+        :type result: sas_api.requester.Result
         """
         if not existing_flight:
             return True
-        return new_flight.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.business_seats
+        return result.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.business_seats
 
     @property
     def __ignored_errors(self):
         return ['225034', '225044', '225036', '225046', '225014']
 
-    def _handle_error(self, new_flight):
+    def _handle_error(self, result):
         # Only save unexpected errors - not where there are no flights
-        if any(error_code in new_flight.error for error_code in self.__ignored_errors):
+        if any(error_code in result.error for error_code in self.__ignored_errors):
             return
 
-        # ApiError.objects.get_or_create(
-        #     origin=new_flight.origin,
-        #     destination=new_flight.destination,
-        #     date=new_flight.out_date,
-        #     error_str=new_flight.error
-        # )
+        ApiError.objects.get_or_create(
+            origin=result.origin,
+            destination=result.destination,
+            date=result.out_date,
+            error_str=result.error
+        )
         # self.email_service.add_error(new_flight)

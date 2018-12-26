@@ -44,6 +44,14 @@ class Result(object):
         """
         return self.seats_by_cabin_class[cabin_class]
 
+    @property
+    def business_seats(self):
+        return self.seats_by_cabin_class[CabinClass.BUSINESS]
+
+    @property
+    def plus_seats(self):
+        return self.seats_by_cabin_class[CabinClass.PLUS]
+
     def __str__(self):
         return "{}-{} at {} offers {}/{}/{} seats".format(
             self.origin,
