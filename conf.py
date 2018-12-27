@@ -1,4 +1,5 @@
-# TODO: Add these to the database and have an interface for it?
+# TODO: Add these to the database and have a (staff) interface for it?
+from awards.models import Airport
 from sasawards import settings
 
 MIN_DATE = '20191001'
@@ -7,17 +8,15 @@ MAX_DATE = None
 
 DAYS_AHEAD = 335
 
-ORIGINS = [
-    'ARN',
-    'CPH',
-]
+ORIGINS = [airport.code for airport in Airport.objects.filter(destination=False)]
 
-DESTINATIONS = [
-    'HKG',
-    # 'EWR',
-    'SFO',
-    'NRT',
-    'LAX',
-]
+DESTINATIONS = [airport.code for airport in Airport.objects.filter(destination=True)]
+
+# DESTINATIONS = [
+#     'HKG',
+#     'SFO',
+#     'NRT',
+#     'LAX',
+# ]
 
 SECONDS_BETWEEN_REQUESTS = settings.SECONDS_BETWEEN

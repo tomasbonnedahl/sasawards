@@ -1,4 +1,4 @@
-- Add e-mail addresses to prod db
+- Add e-mail addresses to prod db - need access first
 - Add 127.0.0.1 and https://..heroku.com as host addresses in settings.py depending on where it's run
 - Each address can subscribe to destinations (via the site)
     - Each airport code listed in db as name together with type, either origin or destination
@@ -6,6 +6,7 @@
 - Filtering like t-hacks, destination and duration on site
 - Set alerts on specific destinations
 - Do not add to queue if already processing/starting
+- Implement ideas from data-driven
 - Empty queue on startup/restart?
 - Remove errors after a while
     Job that removes them after a week, use ts?

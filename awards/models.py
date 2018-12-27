@@ -1,6 +1,36 @@
 import datetime
+
+from django.contrib.auth.models import User
 from django.db import models
 from enumfields import EnumField
+
+
+class Airport(models.Model):
+    code = models.CharField(max_length=3)
+    currently_fetching = models.BooleanField(default=True)
+
+    # Separate origin from destination
+    destination = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "{}, {}".format(self.code, "fetching" if self.currently_fetching else "not fetching")
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions')
+
+
+class SubscriptionToAirport(models.Model):
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
+
+
+class Conf(models.Model):
+    start_date = models.DateField(default=datetime.date.today)
+    stop_date = models.DateField(default=datetime.date.today, null=True, blank=True)
+
+    # Used if stop_date is None
+    days_ahead = models.IntegerField(default=330)
 
 
 class Flight(models.Model):
