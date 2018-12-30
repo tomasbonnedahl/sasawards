@@ -35,7 +35,7 @@ def match(results, org_dst_by_user):
     user1: {'origins': [OR1, OR2], 'destinations': [DS1, DS2]},
     user2: {'origins': [OR3, OR4], 'destinations': [DS4, DS4]},
     
-    users_by_org_dst:
+    users_by_org_dst (inverted from input):
     {
     (OR1, DS1): [user1, ...],
     (OR1, DS2): [user1, ...],
@@ -60,5 +60,4 @@ def match(results, org_dst_by_user):
                 result_by_user[user] = []
             result_by_user[user].append(result)
 
-    print('result: {}'.format(result_by_user))
     return result_by_user

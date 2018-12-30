@@ -31,7 +31,7 @@ class ResponseHandler(object):
 
             if created or self._positive_change(existing_flight=flight, result=result):
                 Changes.objects.create(prev_seats=flight.business_seats, to=flight)
-                self.email_service.add_result(result)
+                self.email_service.add_result(result)  # TODO: Nothing to do with response handler, move
 
             flight.business_seats = result.seats_in_cabin(CabinClass.BUSINESS)
             flight.plus_seats = result.seats_in_cabin(CabinClass.PLUS)
