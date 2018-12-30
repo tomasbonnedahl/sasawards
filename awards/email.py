@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from sendgrid.helpers.mail import *
 
+from awards.matcher import org_dst_by_user, match
 from awards.unsubscribe import unsubscribe_url
 from sas_api.requester import CabinClass
 from sasawards import settings
@@ -34,12 +35,21 @@ def results_to_email(subject, results):
     :type subject: str
     :type results: list[sas_api.requester.Result]
     """
-    if results:
-        for user in User.objects.filter(is_active=True):
-            print('Sending to {}'.format(user.email))
-            message = render_to_string('email_template.html', {'results': results,
-                                                               'unsubscribe_url': unsubscribe_url(user)})
-            send_email(user.email, subject, message)
+    if not results:
+        return
+
+    @property
+    def all_active_users():
+        return User.objects.filter(is_active=True)
+
+    _org_dst_by_user = org_dst_by_user(all_active_users)
+    results_by_user = match(results, _org_dst_by_user)
+
+    for user, filtered_results in results_by_user.items():
+        print('Sending to {}'.format(user.email))
+        message = render_to_string('email_template.html', {'results': filtered_results,
+                                                           'unsubscribe_url': unsubscribe_url(user)})
+        send_email(user.email, subject, message)
 
 
 class EmailService(object):

@@ -2,7 +2,6 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
-from enumfields import EnumField
 
 
 class Airport(models.Model):

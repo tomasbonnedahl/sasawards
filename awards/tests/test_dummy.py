@@ -4,18 +4,8 @@ import pytest
 from django.contrib.auth.models import User
 
 from awards.matcher import match
-from awards.models import Airport, Subscription
+from awards.models import Airport
 from sas_api.requester import Result, CabinClass
-
-
-# @pytest.fixture
-# def org():
-#     return create_airport(code='OR1', destination=False)
-
-
-# @pytest.fixture
-# def dst():
-#     return create_airport(code='DS1', destination=True)
 
 
 def create_airport(code, destination=False):
