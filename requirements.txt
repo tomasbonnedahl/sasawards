@@ -11,3 +11,5 @@ rq==0.12.0
 waitress
 django-enumfields
 sendgrid
+pytest
+pytest-django

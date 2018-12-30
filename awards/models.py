@@ -19,6 +19,9 @@ class Airport(models.Model):
 class Subscription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions')
 
+    def __str__(self):
+        return "For {}".format(self.user.email)
+
 
 class SubscriptionToAirport(models.Model):
     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
@@ -31,6 +34,12 @@ class Conf(models.Model):
 
     # Used if stop_date is None
     days_ahead = models.IntegerField(default=330)
+
+    def __str__(self):
+        return "{} {}".format(self.start_date,
+                              self.stop_date if self.stop_date is not None else "and {} days ahead".format(
+                                  self.days_ahead
+                              ))
 
 
 class Flight(models.Model):
