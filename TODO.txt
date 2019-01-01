@@ -1,3 +1,5 @@
+- Add a record_changes() that returns a dict {'changed': [...], 'added': [...], 'deleted': [...]}
+    Email handler decides what is important
 - Add e-mail addresses to prod db - need access first
 - Add 127.0.0.1 and https://..heroku.com as host addresses in settings.py depending on where it's run
 - Each address can subscribe to destinations (via the site)
