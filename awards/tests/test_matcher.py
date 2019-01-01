@@ -17,18 +17,18 @@ def user():
     return User.objects.create(email='dummy@gmail.com', username='dummy', first_name='Dummy', last_name='Dummysson')
 
 
-def apa(prefix, destination, num_airports):
+def create_airports(prefix, destination, num_airports):
     return [create_airport(code=prefix + str(each), destination=destination) for each in range(0, num_airports)]
 
 
 @pytest.fixture
 def origins():
-    return apa(prefix="OR", destination=False, num_airports=3)
+    return create_airports(prefix="OR", destination=False, num_airports=3)
 
 
 @pytest.fixture
 def destinations():
-    return apa(prefix="DS", destination=True, num_airports=3)
+    return create_airports(prefix="DS", destination=True, num_airports=3)
 
 
 @pytest.mark.django_db

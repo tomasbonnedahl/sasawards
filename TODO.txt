@@ -1,3 +1,4 @@
+- Convert all tests to pytest (or write new)
 - Add a record_changes() that returns a dict {'changed': [...], 'added': [...], 'deleted': [...]}
     Email handler decides what is important
 - Add e-mail addresses to prod db - need access first
