@@ -60,7 +60,7 @@ def save_result(result):
             return True
         return result.business_seats > existing_flight.business_seats
 
-    if result.seats_in_cabin(CabinClass.BUSINESS):
+    if result.business_seats:
         flight, created = Flight.objects.get_or_create(origin=result.origin,
                                                        destination=result.destination,
                                                        date=result.out_date)
@@ -68,11 +68,11 @@ def save_result(result):
         if created or positive_change(existing_flight=flight, result=result):
             Changes.objects.create(prev_seats=flight.business_seats, to=flight)
 
-        flight.business_seats = result.seats_in_cabin(CabinClass.BUSINESS)
-        flight.plus_seats = result.seats_in_cabin(CabinClass.PLUS)
+        flight.business_seats = result.business_seats
+        flight.plus_seats = result.plus_seats
         flight.save()
     else:
-        # TODO: This is dangerouns if we want to an extra round for a specific week e.g. in May
+        # TODO: This is dangerous if we want to an extra round for a specific week e.g. in May
         # will wipe the rest of the data from the database. Flag to the config? Multiple configs at the same time?
         Flight.objects.filter(origin=result.origin,
                               destination=result.destination,

@@ -6,6 +6,7 @@ from sas_api.requester_dod import fetch_flights
 from sas_api.response_handler import ResponseHandler
 import datetime
 
+from sas_api.response_handler_dod import handle_results
 from sas_api.utils import calculate_future_date
 
 

@@ -1,3 +1,5 @@
+- Remove replaced code
+- Write one integration test
 - Convert all tests to pytest (or write new)
 - Start using the Conf model instead of having it in code (config.py)
 - Add e-mail addresses to prod db - need access first
