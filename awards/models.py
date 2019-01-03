@@ -26,6 +26,9 @@ class SubscriptionToAirport(models.Model):
     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
     airport = models.ForeignKey(Airport, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "{} for {}".format(self.subscription.user.email, self.airport.code)
+
 
 class Conf(models.Model):
     start_date = models.DateField(default=datetime.date.today)
