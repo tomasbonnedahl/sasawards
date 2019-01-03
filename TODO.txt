@@ -1,4 +1,5 @@
 - Convert all tests to pytest (or write new)
+- Start using the Conf model instead of having it in code (config.py)
 - Add e-mail addresses to prod db - need access first
 - Add 127.0.0.1 and https://..heroku.com as host addresses in settings.py depending on where it's run
 - Make the fetching job include the config for that job
