@@ -5,6 +5,10 @@
 - Make the fetching job include the config for that job
     - Stops other saved flights to be removed
     - Mutiple can be run in parallell, e.g. only EWR in May and the rest in autumn
+    - Can include
+        meta: dates fetching, config id, etc.
+        results: a list of results
+        errors: a list of Error objects with
 - Each address can subscribe to destinations (via the site)
     - Each airport code listed in db as name together with type, either origin or destination
     - Also add if active origin/dest and fetch those from db instead of in code (move in conf to db)
