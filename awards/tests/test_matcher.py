@@ -3,6 +3,7 @@ import datetime
 import pytest
 from django.contrib.auth.models import User
 
+from awards.email import results_to_email
 from awards.matcher import match
 from awards.models import Airport
 from sas_api.requester import Result, CabinClass
@@ -137,3 +138,9 @@ def test_matcher_no_result(user, origins, destinations):
     airports_by_user = {user: {'origins': origins, 'destinations': destinations}}
     matched_result = match([], airports_by_user)
     assert matched_result == {}
+
+
+@pytest.mark.django_db
+def test_prop(user, origins, destinations):
+    result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
+    results_to_email('Subject', [result])
