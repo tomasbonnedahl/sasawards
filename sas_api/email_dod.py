@@ -52,12 +52,11 @@ def results_to_email(subject, results):
     if not results:
         return
 
-    @property
     def all_active_users():
         return User.objects.filter(is_active=True)
 
     # TODO: Turn this around to {('ORG', 'DST): [user1, user2, ..], ('ORG2', 'DST2): [user3, user4, ...]}?
-    _org_dst_by_user = org_dst_by_user(all_active_users)
+    _org_dst_by_user = org_dst_by_user(all_active_users())
     results_by_user = match(results, _org_dst_by_user)
 
     for user, filtered_results in results_by_user.items():
