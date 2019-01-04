@@ -21,8 +21,8 @@ def test_email():
     sleep(3)
 
     from awards.email import results_to_email
-    result = Result(origin='ORG',
-                    destination='DST',
+    result = Result(origin='CPH',
+                    destination='NRT',
                     out_date=datetime.date(2019, 1, 1))
     result.add(CabinClass.BUSINESS, 6)
     print('*** Trying to e-mail....')

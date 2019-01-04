@@ -42,9 +42,7 @@ def results_to_email(subject, results):
         return User.objects.filter(is_active=True)
 
     _org_dst_by_user = org_dst_by_user(all_active_users())
-    print('_org_dst_by_user: {}'.format(_org_dst_by_user))
     results_by_user = match(results, _org_dst_by_user)
-    print('results_by_user: {}'.format(results_by_user))
 
     for user, filtered_results in results_by_user.items():
         print('Sending to {}'.format(user.email))
