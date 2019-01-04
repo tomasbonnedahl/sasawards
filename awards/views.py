@@ -8,7 +8,7 @@ from awards.models import Flight, Changes, ApiError
 from awards.unsubscribe import user_from_token, unsubscribe_user, unsubscribe_url
 
 
-@login_required
+# @login_required
 def index(request):
     return HttpResponse('Hello')
 

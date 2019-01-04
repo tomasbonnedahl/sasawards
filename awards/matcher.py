@@ -48,7 +48,7 @@ def match(results, org_dst_by_user):
     users_by_org_dst = defaultdict(list)
     for user, org_dst in org_dst_by_user.items():
         for org, dst in product(org_dst['origins'], org_dst['destinations']):
-            key = (org.code, dst.code)
+            key = (org, dst)
             users_by_org_dst[key].append(user)
 
     result_by_user = {}

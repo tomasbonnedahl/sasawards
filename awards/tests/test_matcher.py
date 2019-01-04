@@ -34,7 +34,8 @@ def destinations():
 
 @pytest.mark.django_db
 def test_matcher_single_hit(user, origins, destinations):
-    airports_by_user = {user: {'origins': origins, 'destinations': destinations}}
+    airports_by_user = {user: {'origins': [each.code for each in origins],
+                               'destinations': [each.code for each in destinations]}}
 
     result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
     result.add(CabinClass.BUSINESS, 6)
@@ -48,8 +49,10 @@ def test_matcher_mutiple_users_same_hit(user, origins, destinations):
     another_user = User.objects.create(email='dummy2@gmail.com', username='dummy2')
 
     airports_by_user = {
-        user: {'origins': origins, 'destinations': destinations},
-        another_user: {'origins': origins, 'destinations': destinations},
+        user: {'origins': [each.code for each in origins],
+               'destinations': [each.code for each in destinations]},
+        another_user: {'origins': [each.code for each in origins],
+                       'destinations': [each.code for each in destinations]},
     }
 
     result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
@@ -70,8 +73,9 @@ def test_matcher_mutiple_users_different_hit(user, origins, destinations):
     yyy = Airport.objects.create(code='YYY', currently_fetching=True, destination=True)
 
     airports_by_user = {
-        user: {'origins': origins, 'destinations': destinations},
-        another_user: {'origins': [xxx], 'destinations': [yyy]},
+        user: {'origins': [each.code for each in origins],
+               'destinations': [each.code for each in destinations]},
+        another_user: {'origins': [xxx.code], 'destinations': [yyy.code]},
     }
 
     result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
@@ -89,7 +93,8 @@ def test_matcher_mutiple_users_different_hit(user, origins, destinations):
 
 @pytest.mark.django_db
 def test_matcher_only_origin_matching(user, origins, destinations):
-    airports_by_user = {user: {'origins': origins, 'destinations': destinations}}
+    airports_by_user = {user: {'origins': [each.code for each in origins],
+                               'destinations': [each.code for each in destinations]}}
 
     result = Result(origins[0].code, 'NIL', datetime.date(2019, 10, 10))
     result.add(CabinClass.BUSINESS, 6)
@@ -100,7 +105,8 @@ def test_matcher_only_origin_matching(user, origins, destinations):
 
 @pytest.mark.django_db
 def test_matcher_only_destination_matching(user, origins, destinations):
-    airports_by_user = {user: {'origins': origins, 'destinations': destinations}}
+    airports_by_user = {user: {'origins': [each.code for each in origins],
+                               'destinations': [each.code for each in destinations]}}
 
     result = Result('NIL', destinations[0].code, datetime.date(2019, 10, 10))
     result.add(CabinClass.BUSINESS, 6)
@@ -111,7 +117,8 @@ def test_matcher_only_destination_matching(user, origins, destinations):
 
 @pytest.mark.django_db
 def test_matcher_multiple(user, origins, destinations):
-    airports_by_user = {user: {'origins': origins, 'destinations': destinations}}
+    airports_by_user = {user: {'origins': [each.code for each in origins],
+                               'destinations': [each.code for each in destinations]}}
 
     result1 = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
     result1.add(CabinClass.BUSINESS, 6)
@@ -124,7 +131,8 @@ def test_matcher_multiple(user, origins, destinations):
 
 @pytest.mark.django_db
 def test_matcher_zero_result(user, origins, destinations):
-    airports_by_user = {user: {'origins': origins, 'destinations': destinations}}
+    airports_by_user = {user: {'origins': [each.code for each in origins],
+                               'destinations': [each.code for each in destinations]}}
 
     result = Result('XXX', 'YYY', datetime.date(2019, 10, 10))
     result.add(CabinClass.BUSINESS, 6)
@@ -135,7 +143,9 @@ def test_matcher_zero_result(user, origins, destinations):
 
 @pytest.mark.django_db
 def test_matcher_no_result(user, origins, destinations):
-    airports_by_user = {user: {'origins': origins, 'destinations': destinations}}
+    airports_by_user = {user: {'origins': [each.code for each in origins],
+                               'destinations': [each.code for each in destinations]}}
+
     matched_result = match([], airports_by_user)
     assert matched_result == {}
 
