@@ -88,7 +88,6 @@ def from_json_to_result(json_response):
                     for fare in product_value['fares']:
                         if fare['avlSeats'] > seats_by_cabin[cabin_class_name]:
                             seats_by_cabin[cabin_mapper(cabin_class_name)] = fare['avlSeats']
-        print(seats_by_cabin)
         return seats_by_cabin
 
     if json_response is None:

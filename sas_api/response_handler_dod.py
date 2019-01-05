@@ -63,7 +63,7 @@ def save_result(result):
     if result.business_seats:
         flight, created = Flight.objects.get_or_create(origin=result.origin,
                                                        destination=result.destination,
-                                                       date=result.out_date)
+                                                       date=result.departure_date)
 
         if created or positive_change(existing_flight=flight, result=result):
             Changes.objects.create(prev_seats=flight.business_seats, to=flight)

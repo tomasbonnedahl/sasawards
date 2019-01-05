@@ -29,7 +29,7 @@ def compile_diffs(diffs):
     """
     :type diffs: dict
     """
-    return diffs['added'] + get_positive_changes(diffs['changes'])
+    return diffs['added'] + get_positive_changes(diffs['changed'])
 
 
 def send_email(to, subject, message):

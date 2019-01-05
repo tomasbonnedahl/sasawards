@@ -45,6 +45,23 @@ def test_matcher_single_hit(user, origins, destinations):
 
 
 @pytest.mark.django_db
+def test_matcher_return_trip(user, origins, destinations):
+    airports_by_user = {user: {'origins': [each.code for each in origins],
+                               'destinations': [each.code for each in destinations]}}
+
+    result_out = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
+    result_out.add(CabinClass.BUSINESS, 6)
+
+    result_return = Result(destinations[0].code, origins[0].code, datetime.date(2019, 10, 10))
+    result_return.add(CabinClass.BUSINESS, 4)
+
+    matched_result = match([result_out, result_return], airports_by_user)
+    assert len(matched_result[user]) == 2
+    for expected in [result_out, result_return]:
+        assert expected in matched_result[user]
+
+
+@pytest.mark.django_db
 def test_matcher_mutiple_users_same_hit(user, origins, destinations):
     another_user = User.objects.create(email='dummy2@gmail.com', username='dummy2')
 

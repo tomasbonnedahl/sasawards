@@ -35,7 +35,7 @@ def match(results, org_dst_by_user):
     user1: {'origins': [OR1, OR2], 'destinations': [DS1, DS2]},
     user2: {'origins': [OR3, OR4], 'destinations': [DS4, DS4]},
     
-    users_by_org_dst (inverted from input):
+    users_by_org_dst (inverted from input) + includes the return trip:
     {
     (OR1, DS1): [user1, ...],
     (OR1, DS2): [user1, ...],
@@ -49,7 +49,8 @@ def match(results, org_dst_by_user):
     for user, org_dst in org_dst_by_user.items():
         for org, dst in product(org_dst['origins'], org_dst['destinations']):
             key = (org, dst)
-            users_by_org_dst[key].append(user)
+            for key in [(org, dst), ((dst, org))]:  # Adding return-trip
+                users_by_org_dst[key].append(user)
 
     result_by_user = {}
     for result in results:
