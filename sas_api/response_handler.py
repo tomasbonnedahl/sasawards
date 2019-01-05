@@ -91,6 +91,7 @@ def handle_results(results):
     """
     :type results: list[sas_api.requester.Result]
     """
+    results = [each for each in results if each is not None]
     diffs = get_diffs(results)
     save_results(results)
     email_diffs(diffs)
