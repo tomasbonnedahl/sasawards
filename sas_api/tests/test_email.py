@@ -3,9 +3,9 @@ import datetime
 import pytest
 
 from awards.models import Flight
-from sas_api.email_dod import get_positive_changes
+from sas_api.email import get_positive_changes
 from sas_api.requester_dod import Result
-from sas_api.response_handler_dod import ChangedResultExisting
+from sas_api.response_handler import ChangedResultExisting
 
 
 @pytest.mark.django_db

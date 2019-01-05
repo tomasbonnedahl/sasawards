@@ -3,9 +3,9 @@ import datetime
 import pytest
 from django.contrib.auth.models import User
 
-from awards.email import results_to_email
-from awards.matcher import match
+from sas_api.matcher import match
 from awards.models import Airport
+from sas_api.email import results_to_email
 from sas_api.requester import Result, CabinClass
 
 

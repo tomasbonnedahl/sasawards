@@ -1,67 +1,96 @@
-from awards.models import Flight, Changes, ApiError
+import operator
+from collections import namedtuple
+
+from awards.models import Flight, Changes
+from sas_api.email import email_diffs
 from sas_api.requester import CabinClass
 
+ChangedResultExisting = namedtuple('ChangedResultExisting', 'result existing')
 
-class ResponseHandler(object):
-    def __init__(self, response, email_service, log):
-        """
-        :type response: sas_api.requester.ResultHandler
-        """
-        self.response = response
-        self.log = log
-        self.email_service = email_service
 
-    def execute(self):
-        for result in self.response.valid_results:
-            self._handle_result(result)
-        self.email_service.send('New seats found')
+def diff_from_results_and_existing(results, existing):
+    """
+    :type results: list[sas_api.requester_dod.Result]
+    :type existing: list[awards.models.Flight]
+    :rtype: dict
+    """
+    result_key = lambda x: (x.origin, x.destination, x.departure_date)
+    result_by_key = {result_key(each): each for each in results}
 
-        for error in self.response.errors:
-            self._handle_error(error)
-        # self.email_service.send('Errors from SAS Awards')
+    flight_key = lambda x: (x.origin, x.destination, x.date)
+    existing_by_key = {flight_key(each): each for each in existing}
 
-    def _handle_result(self, result):
-        """
-        :type result: sas_api.requester.Result
-        """
-        if result.seats_in_cabin(CabinClass.BUSINESS):
-            flight, created = Flight.objects.get_or_create(origin=result.origin,
-                                                           destination=result.destination,
-                                                           date=result.out_date)
+    added_keys = result_by_key.keys() - existing_by_key.keys()
+    added = [result_by_key[key] for key in added_keys]
 
-            if created or self._positive_change(existing_flight=flight, result=result):
-                Changes.objects.create(prev_seats=flight.business_seats, to=flight)
-                self.email_service.add_result(result)  # TODO: Nothing to do with response handler, move
+    deleted_keys = existing_by_key.keys() - result_by_key.keys()
+    deleted = [existing_by_key[key] for key in deleted_keys]
 
-            flight.business_seats = result.seats_in_cabin(CabinClass.BUSINESS)
-            flight.plus_seats = result.seats_in_cabin(CabinClass.PLUS)
-            flight.save()
-        else:
-            Flight.objects.filter(origin=result.origin,
-                                  destination=result.destination,
-                                  date=result.out_date).delete()
+    changed_keys = set(existing_by_key.keys()).intersection(result_by_key.keys())
+    changed = [ChangedResultExisting(result=result_by_key[key],
+                                     existing=existing_by_key[key]) for key in changed_keys]
 
-    def _positive_change(self, existing_flight, result):
+    return {
+        'added': added,
+        'changed': changed,
+        'deleted': deleted,
+    }
+
+
+def get_diffs(results):
+    """
+    :type results: list[sas_api.requester_dod.Result]
+    """
+    # TODO: Only fetch existing for the dates we have results, attach meta data to results?
+    # E.g. {'meta': {'from_date': ..., 'to_date': ...}, 'results': list[Results]}
+    # Will not remove old flights in db if start_date moves forward
+    existing = Flight.objects.all()
+    return diff_from_results_and_existing(results, existing)
+
+
+def save_result(result):
+    """
+    :type results: sas_api.requester_dod.Result
+    """
+    def positive_change(existing_flight, result):
         """
         :type result: sas_api.requester.Result
         """
         if not existing_flight:
             return True
-        return result.seats_in_cabin(CabinClass.BUSINESS) > existing_flight.business_seats
+        return result.business_seats > existing_flight.business_seats
 
-    @property
-    def __ignored_errors(self):
-        return ['225034', '225044', '225036', '225046', '225014']
+    if result.business_seats:
+        flight, created = Flight.objects.get_or_create(origin=result.origin,
+                                                       destination=result.destination,
+                                                       date=result.departure_date)
 
-    def _handle_error(self, result):
-        # Only save unexpected errors - not where there are no flights
-        if any(error_code in result.error for error_code in self.__ignored_errors):
-            return
+        if created or positive_change(existing_flight=flight, result=result):
+            Changes.objects.create(prev_seats=flight.business_seats, to=flight)
 
-        ApiError.objects.get_or_create(
-            origin=result.origin,
-            destination=result.destination,
-            date=result.out_date,
-            error_str=result.error
-        )
-        # self.email_service.add_error(new_flight)
+        flight.business_seats = result.business_seats
+        flight.plus_seats = result.plus_seats
+        flight.save()
+    else:
+        # TODO: This is dangerous if we want to an extra round for a specific week e.g. in May
+        # will wipe the rest of the data from the database. Flag to the config? Multiple configs at the same time?
+        Flight.objects.filter(origin=result.origin,
+                              destination=result.destination,
+                              date=result.out_date).delete()
+
+
+def save_results(results):
+    """
+    :type results: list[sas_api.requester_dod.Result]
+    """
+    for result in results:
+        save_result(result)
+
+
+def handle_results(results):
+    """
+    :type results: list[sas_api.requester_dod.Result]
+    """
+    diffs = get_diffs(results)
+    save_results(results)
+    email_diffs(diffs)

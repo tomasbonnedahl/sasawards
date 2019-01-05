@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from awards.models import Airport, Subscription, SubscriptionToAirport
 from sas_api.config import Config
 from sas_api.requester_dod import fetch_flights
-from sas_api.response_handler_dod import handle_results
+from sas_api.response_handler import handle_results
 
 
 def create_airport(code, destination=False):
@@ -72,7 +72,7 @@ def test_config_to_email(monkeypatch, user, origins, destinations, subscribed_ai
         email_values_by_type['subject'] = subject
         email_values_by_type['message'] = message
 
-    monkeypatch.setattr('sas_api.email_dod.send_email', send_email_mock)
+    monkeypatch.setattr('sas_api.email.send_email', send_email_mock)
 
     def zero_random():
         return 0.0

@@ -1,13 +1,8 @@
-from sas_api.config import create_config
-from awards.email import EmailService
-from sas_api.parser import ResponseParser
-from sas_api.requester import FlightGetter, Requester
-from sas_api.requester_dod import fetch_flights
-from sas_api.response_handler import ResponseHandler
 import datetime
 
-from sas_api.response_handler_dod import handle_results
-from sas_api.utils import calculate_future_date
+from sas_api.config import create_config
+from sas_api.requester_dod import fetch_flights
+from sas_api.response_handler import handle_results
 
 
 def expected_duration_in_min(config):
@@ -18,20 +13,14 @@ def expected_duration_in_min(config):
     return round(len(config.origins) * len(config.destinations) * 2 * days * (config.seconds + 0.5 + 1.5) / 60.0)
 
 
-def get_new_flight_data(log):
-    # TODO: Decorator
-    start_time = datetime.datetime.now()
-    config = create_config()
-    log.info("Expected duration: {} min".format(expected_duration_in_min(config)))
-    requester = Requester(config.base_url, log)
-    response = FlightGetter(config, requester, ResponseParser(), log).execute()
-    email_service = EmailService(log)
-    ResponseHandler(response, email_service, log).execute()
-    actual = round((datetime.datetime.now() - start_time).seconds / 60.0)
-    log.info("Actual duration: {} min".format(actual))
-
-
 def fetch_flights_and_store_results():
+    start_time = datetime.datetime.now()
+
     config = create_config()
+    print("Expected duration: {} min".format(expected_duration_in_min(config)))
+
     results = fetch_flights(config)
     handle_results(results)
+
+    actual = round((datetime.datetime.now() - start_time).seconds / 60.0)
+    print("Actual duration: {} min".format(actual))

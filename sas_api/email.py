@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from sendgrid import Email
 from sendgrid.helpers.mail import Content, Mail
 
-from awards.matcher import org_dst_by_user, match
+from sas_api.matcher import org_dst_by_user, match
 from awards.unsubscribe import unsubscribe_url
 from sasawards import settings
 

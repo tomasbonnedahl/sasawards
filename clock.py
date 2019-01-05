@@ -20,7 +20,8 @@ def test_email():
     # Too eager, wait for other services to boot
     sleep(3)
 
-    from awards.email import results_to_email
+    # from awards.email import results_to_email
+    from sas_api.email import results_to_email
     result = Result(origin='CPH',
                     destination='NRT',
                     out_date=datetime.date(2019, 1, 1))
@@ -39,12 +40,12 @@ def timed_job():
     sleep(5)
 
     import django_rq
-    from rq.worker import logger as rq_logger
-    from sas_api.services import get_new_flight_data
+    # from rq.worker import logger as rq_logger
 
     queue = django_rq.get_queue()
     if queue.is_empty():
-        django_rq.enqueue(get_new_flight_data, rq_logger)
+        from sas_api.services import fetch_flights_and_store_results
+        django_rq.enqueue(fetch_flights_and_store_results)
 
     # worker = django_rq.get_worker()
     # print('worker state: {} for worker {}'.format(worker.get_state(), worker.name))

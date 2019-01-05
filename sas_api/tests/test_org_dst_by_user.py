@@ -1,8 +1,8 @@
 import pytest
 from django.contrib.auth.models import User
 
-from awards.matcher import org_dst_by_user
 from awards.models import Subscription, SubscriptionToAirport, Airport
+from sas_api.matcher import org_dst_by_user
 
 
 def user(i):
