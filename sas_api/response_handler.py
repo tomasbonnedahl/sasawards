@@ -10,7 +10,7 @@ ChangedResultExisting = namedtuple('ChangedResultExisting', 'result existing')
 
 def diff_from_results_and_existing(results, existing):
     """
-    :type results: list[sas_api.requester_dod.Result]
+    :type results: list[sas_api.requester.Result]
     :type existing: list[awards.models.Flight]
     :rtype: dict
     """
@@ -39,7 +39,7 @@ def diff_from_results_and_existing(results, existing):
 
 def get_diffs(results):
     """
-    :type results: list[sas_api.requester_dod.Result]
+    :type results: list[sas_api.requester.Result]
     """
     # TODO: Only fetch existing for the dates we have results, attach meta data to results?
     # E.g. {'meta': {'from_date': ..., 'to_date': ...}, 'results': list[Results]}
@@ -50,7 +50,7 @@ def get_diffs(results):
 
 def save_result(result):
     """
-    :type results: sas_api.requester_dod.Result
+    :type results: sas_api.requester.Result
     """
     def positive_change(existing_flight, result):
         """
@@ -81,7 +81,7 @@ def save_result(result):
 
 def save_results(results):
     """
-    :type results: list[sas_api.requester_dod.Result]
+    :type results: list[sas_api.requester.Result]
     """
     for result in results:
         save_result(result)
@@ -89,7 +89,7 @@ def save_results(results):
 
 def handle_results(results):
     """
-    :type results: list[sas_api.requester_dod.Result]
+    :type results: list[sas_api.requester.Result]
     """
     diffs = get_diffs(results)
     save_results(results)

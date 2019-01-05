@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from sas_api.matcher import match
 from awards.models import Airport
 from sas_api.email import results_to_email
-from sas_api.requester import Result, CabinClass
+# from sas_api.requester import Result
+from sas_api.requester import CabinClass, Result
 
 
 def create_airport(code, destination=False):
@@ -37,8 +38,11 @@ def test_matcher_single_hit(user, origins, destinations):
     airports_by_user = {user: {'origins': [each.code for each in origins],
                                'destinations': [each.code for each in destinations]}}
 
-    result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
-    result.add(CabinClass.BUSINESS, 6)
+    result = Result(origins[0].code,
+                    destinations[0].code,
+                    datetime.date(2019, 10, 10),
+                    business_seats=6,
+                    plus_seats=0)
 
     matched_result = match([result], airports_by_user)
     assert matched_result == {user: [result]}
@@ -49,11 +53,17 @@ def test_matcher_return_trip(user, origins, destinations):
     airports_by_user = {user: {'origins': [each.code for each in origins],
                                'destinations': [each.code for each in destinations]}}
 
-    result_out = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
-    result_out.add(CabinClass.BUSINESS, 6)
+    result_out = Result(origins[0].code,
+                        destinations[0].code,
+                        datetime.date(2019, 10, 10),
+                        business_seats=6,
+                        plus_seats=0)
 
-    result_return = Result(destinations[0].code, origins[0].code, datetime.date(2019, 10, 10))
-    result_return.add(CabinClass.BUSINESS, 4)
+    result_return = Result(destinations[0].code,
+                           origins[0].code,
+                           datetime.date(2019, 10, 10),
+                           business_seats=4,
+                           plus_seats=4)
 
     matched_result = match([result_out, result_return], airports_by_user)
     assert len(matched_result[user]) == 2
@@ -72,8 +82,11 @@ def test_matcher_mutiple_users_same_hit(user, origins, destinations):
                        'destinations': [each.code for each in destinations]},
     }
 
-    result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
-    result.add(CabinClass.BUSINESS, 6)
+    result = Result(origins[0].code,
+                    destinations[0].code,
+                    datetime.date(2019, 10, 10),
+                    business_seats=6,
+                    plus_seats=0)
 
     matched_result = match([result], airports_by_user)
     assert matched_result == {
@@ -95,11 +108,13 @@ def test_matcher_mutiple_users_different_hit(user, origins, destinations):
         another_user: {'origins': [xxx.code], 'destinations': [yyy.code]},
     }
 
-    result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
-    result.add(CabinClass.BUSINESS, 6)
+    result = Result(origins[0].code,
+                    destinations[0].code,
+                    datetime.date(2019, 10, 10),
+                    business_seats=6,
+                    plus_seats=0)
 
-    result2 = Result(xxx.code, yyy.code, datetime.date(2019, 10, 10))
-    result2.add(CabinClass.BUSINESS, 2)
+    result2 = Result(xxx.code, yyy.code, datetime.date(2019, 10, 10), business_seats=2, plus_seats=0)
 
     matched_result = match([result, result2], airports_by_user)
     assert matched_result == {
@@ -113,8 +128,11 @@ def test_matcher_only_origin_matching(user, origins, destinations):
     airports_by_user = {user: {'origins': [each.code for each in origins],
                                'destinations': [each.code for each in destinations]}}
 
-    result = Result(origins[0].code, 'NIL', datetime.date(2019, 10, 10))
-    result.add(CabinClass.BUSINESS, 6)
+    result = Result(origins[0].code,
+                    'NIL',
+                    datetime.date(2019, 10, 10),
+                    business_seats=6,
+                    plus_seats=0)
 
     matched_result = match([result], airports_by_user)
     assert matched_result == {}
@@ -125,8 +143,11 @@ def test_matcher_only_destination_matching(user, origins, destinations):
     airports_by_user = {user: {'origins': [each.code for each in origins],
                                'destinations': [each.code for each in destinations]}}
 
-    result = Result('NIL', destinations[0].code, datetime.date(2019, 10, 10))
-    result.add(CabinClass.BUSINESS, 6)
+    result = Result('NIL',
+                    destinations[0].code,
+                    datetime.date(2019, 10, 10),
+                    business_seats=6,
+                    plus_seats=0)
 
     matched_result = match([result], airports_by_user)
     assert matched_result == {}
@@ -137,10 +158,16 @@ def test_matcher_multiple(user, origins, destinations):
     airports_by_user = {user: {'origins': [each.code for each in origins],
                                'destinations': [each.code for each in destinations]}}
 
-    result1 = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
-    result1.add(CabinClass.BUSINESS, 6)
-    result2 = Result(origins[1].code, destinations[1].code, datetime.date(2019, 10, 10))
-    result2.add(CabinClass.BUSINESS, 3)
+    result1 = Result(origins[0].code,
+                     destinations[0].code,
+                     datetime.date(2019, 10, 10),
+                     business_seats=6,
+                     plus_seats=0)
+    result2 = Result(origins[1].code,
+                     destinations[1].code,
+                     datetime.date(2019, 10, 10),
+                     business_seats=6,
+                     plus_seats=0)
 
     matched_result = match([result1, result2], airports_by_user)
     assert matched_result == {user: [result1, result2]}
@@ -151,8 +178,7 @@ def test_matcher_zero_result(user, origins, destinations):
     airports_by_user = {user: {'origins': [each.code for each in origins],
                                'destinations': [each.code for each in destinations]}}
 
-    result = Result('XXX', 'YYY', datetime.date(2019, 10, 10))
-    result.add(CabinClass.BUSINESS, 6)
+    result = Result('XXX', 'YYY', datetime.date(2019, 10, 10), business_seats=6, plus_seats=0)
 
     matched_result = match([result], airports_by_user)
     assert matched_result == {}
@@ -169,5 +195,9 @@ def test_matcher_no_result(user, origins, destinations):
 
 @pytest.mark.django_db
 def test_prop(user, origins, destinations):
-    result = Result(origins[0].code, destinations[0].code, datetime.date(2019, 10, 10))
+    result = Result(origins[0].code,
+                    destinations[0].code,
+                    datetime.date(2019, 10, 10),
+                    business_seats=6,
+                    plus_seats=0)
     results_to_email('Subject', [result])

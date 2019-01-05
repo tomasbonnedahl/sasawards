@@ -4,7 +4,7 @@ import pytest
 
 from awards.models import Flight
 from sas_api.email import get_positive_changes
-from sas_api.requester_dod import Result
+from sas_api.requester import Result
 from sas_api.response_handler import ChangedResultExisting
 
 

@@ -6,7 +6,7 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # sched = BlockingScheduler()  # Use when in separate clock dyno
-from sas_api.requester import Result, CabinClass
+from sas_api.requester import Result
 from sasawards.settings import MINUTE_INTERVAL_FLIGHT_FETCH
 
 sched = BackgroundScheduler()  # Use when used from wsgi.py
@@ -24,8 +24,8 @@ def test_email():
     from sas_api.email import results_to_email
     result = Result(origin='CPH',
                     destination='NRT',
-                    out_date=datetime.date(2019, 1, 1))
-    result.add(CabinClass.BUSINESS, 6)
+                    departure_date=datetime.date(2019, 1, 1),
+                    business_seats=6)
     print('*** Trying to e-mail....')
     results_to_email("Testing", [result])
     print('*** Done sending')

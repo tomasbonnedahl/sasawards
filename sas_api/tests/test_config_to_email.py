@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 from awards.models import Airport, Subscription, SubscriptionToAirport
 from sas_api.config import Config
-from sas_api.requester_dod import fetch_flights
+from sas_api.requester import fetch_flights
 from sas_api.response_handler import handle_results
 
 
@@ -64,7 +64,7 @@ def test_config_to_email(monkeypatch, user, origins, destinations, subscribed_ai
                               destination=parsed_query_str['to'][0],
                               departure_date=departure_date)
 
-    monkeypatch.setattr('sas_api.requester_dod.from_url_to_json', from_url_to_json_mock)
+    monkeypatch.setattr('sas_api.requester.from_url_to_json', from_url_to_json_mock)
 
     email_values_by_type = defaultdict()
     def send_email_mock(to, subject, message):
@@ -77,7 +77,7 @@ def test_config_to_email(monkeypatch, user, origins, destinations, subscribed_ai
     def zero_random():
         return 0.0
 
-    monkeypatch.setattr('sas_api.requester_dod.random', zero_random)
+    monkeypatch.setattr('sas_api.requester.random', zero_random)
 
     config = Config(base_url='http://fakeurl.com/?',
                     min_date=datetime.date(2019, 1, 1),

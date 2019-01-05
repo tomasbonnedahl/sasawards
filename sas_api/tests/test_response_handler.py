@@ -3,7 +3,7 @@ import datetime
 import pytest
 
 from awards.models import Flight
-from sas_api.requester_dod import Result
+from sas_api.requester import Result
 from sas_api.response_handler import diff_from_results_and_existing
 
 

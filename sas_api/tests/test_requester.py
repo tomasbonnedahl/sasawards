@@ -4,7 +4,7 @@ import json
 import pytest
 
 from sas_api.config import Config
-from sas_api.requester_dod import from_config_to_url, Urls, from_json_to_result
+from sas_api.requester import from_config_to_url, Urls, from_json_to_result
 
 
 @pytest.fixture

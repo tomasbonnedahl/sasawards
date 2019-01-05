@@ -12,7 +12,7 @@ from sasawards import settings
 
 def get_positive_changes(changes):
     """
-    :type changes: list[response_handler_dod.ChangedResultExisting]
+    :type changes: list[response_handler.ChangedResultExisting]
     :rtype: list[sas_api.requester.Result]
     """
     def more_seats(result, existing):

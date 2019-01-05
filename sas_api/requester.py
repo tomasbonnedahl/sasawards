@@ -1,11 +1,13 @@
-from collections import defaultdict
-from datetime import timedelta, datetime
+import datetime
+import itertools
+from collections import namedtuple, defaultdict
 from enum import Enum
 from random import random
 from time import sleep
 
-import itertools
 import requests
+
+Result = namedtuple("Result", "origin destination departure_date business_seats plus_seats")
 
 
 class CabinClass(Enum):
@@ -14,116 +16,33 @@ class CabinClass(Enum):
     GO = 'g'
 
 
-class Result(object):
-    def __init__(self, origin=None, destination=None, out_date=None, error=None):
-        self.origin = origin
-        self.destination = destination
-        self.out_date = out_date
-        self.seats_by_cabin_class = defaultdict(int)
-        self.error = error
-
-    def add(self, cabin_class, seats):
-        """
-        :type cabin_class: CabinClass
-        :type seats: int
-        """
-        self.seats_by_cabin_class[cabin_class] = seats
-
-    def add_error(self, error):
-        """
-        :type error: str
-        """
-        self.error = error
-
-    def has_errors(self):
-        return self.error is not None
-
-    def seats_in_cabin(self, cabin_class):
-        """
-        :type cabin_class: CabinClass
-        """
-        return self.seats_by_cabin_class[cabin_class]
-
-    @property
-    def business_seats(self):
-        return self.seats_by_cabin_class[CabinClass.BUSINESS]
-
-    @property
-    def plus_seats(self):
-        return self.seats_by_cabin_class[CabinClass.PLUS]
-
-    def __str__(self):
-        return "{}-{} at {} offers {}/{}/{} seats".format(
-            self.origin,
-            self.destination,
-            self.out_date,
-            self.seats_by_cabin_class[CabinClass.BUSINESS],
-            self.seats_by_cabin_class[CabinClass.PLUS],
-            self.seats_by_cabin_class[CabinClass.GO],
-        )
+def from_config_to_url(base_url, origin, destination, departure_date):
+    value_by_api_keyword = {
+        'from': origin,
+        'to': destination,
+        'outDate': departure_date.strftime("%Y%m%d"),
+        'adt': '2',
+        'chd': '0',
+        'inf': '0',
+        'yth': '0',
+        'bookingFlow': 'points',
+        'pos': 'no',
+        'channel': 'web',
+        'displayType': 'upsell',
+    }
+    return base_url + "&".join([str(k) + '=' + str(v) for k, v in value_by_api_keyword.items()])
 
 
-class ResultHandler(object):
-    def __init__(self):
-        self.valid_results = []
-        self.errors = []
-
-    def add(self, origin, destination, out_date, result):
-        """
-        :type result: Result
-        """
-        if not all([result.origin, result.destination, result.out_date]):
-            result.origin = origin
-            result.destination = destination
-            result.out_date = out_date
-
-        if result.error is not None:
-            self.errors.append(result)
-        else:
-            self.valid_results.append(result)
-
-
-class Requester(object):
-    def __init__(self, base_url, log):
-        self.base_url = base_url
-        self.log = log
-
-    def _params(self, origin, destination, out_date):
-        """
-        :type origin: str
-        :type destination: str
-        :type out_date: datetime.date
-        """
-        standard = "&adt=2&chd=0&inf=0&yth=0&bookingFlow=points&pos=no&channel=web&displayType=upsell"
-
-        value_by_api_keyword = {
-            'from=': origin,
-            'to=': destination,
-            'outDate=': out_date.strftime("%Y%m%d"),
-        }
-        return "&".join([str(k) + str(v) for k, v in value_by_api_keyword.items()]) + standard
-
-    def request(self, origin, destination, out_date):
-        params = self._params(origin, destination, out_date)
-        r = requests.get(self.base_url + params)
-        if not r.ok:
-            self.log.error('Not ok for {}-{}@{}, status code: {}'.format(origin, destination, out_date, r.status_code))
-            return
-        return r.json()
-
-
-class FlightGetter(object):
-    def __init__(self, config, requester, parser, log):
-        """
-        :type config: sas_api.config.Config
-        """
+class Urls(object):
+    def __init__(self, config):
         self.config = config
-        self.parser = parser
-        self.requester = requester
-        self.log = log
-        self.result_handler = ResultHandler()
 
-    def execute(self):
+    @property
+    def __days(self):
+        delta = self.config.max_date - self.config.min_date
+        return delta.days + 1  # Inclusive of last date
+
+    def __iter__(self):
         outbound_data = [self.config.origins, self.config.destinations, range(self.__days)]
         inbound_data = [self.config.destinations, self.config.origins, range(self.__days)]
 
@@ -131,23 +50,97 @@ class FlightGetter(object):
         inbound = itertools.product(*inbound_data)
 
         for origin, dst, day in itertools.chain(outbound, inbound):
-            out_date = self.config.min_date + timedelta(day)
-            json_data = self.requester.request(origin=origin,
-                                               destination=dst,
-                                               out_date=out_date)
-            result = self.parser.parse(json_data)
-            if result:
-                self.result_handler.add(origin, dst, out_date, result)
+            yield from_config_to_url(base_url=self.config.base_url,
+                                     origin=origin,
+                                     destination=dst,
+                                     departure_date=self.config.min_date + datetime.timedelta(day),
+                                     )
 
-            sleep(self.config.seconds + round(random(), 2))
 
-        return self.result_handler
+def from_url_to_json(url):
+    r = requests.get(url)
+    if not r.ok:
+        # TODO: Logging - file/area specific?
+        # self.log.error('Not ok for {}-{}@{}, status code: {}'.format(origin, destination, out_date, r.status_code))
+        return None
+    return r.json()
 
-    @property
-    def errors(self):
-        return self.errors
 
-    @property
-    def __days(self):
-        delta = self.config.max_date - self.config.min_date
-        return delta.days + 1  # Inclusive of last date
+def cabin_mapper(sas_cabin_name):
+    # From SAS cabin name to enum
+    return {
+        'BUSINESS': CabinClass.BUSINESS,
+        'PLUS': CabinClass.PLUS,
+        'GO': CabinClass.GO,
+    }[sas_cabin_name]
+
+
+def from_json_to_result(json_response):
+    """
+    :type json_response: dict
+    :rtype Result | None
+    """
+
+    def _seats_by_cabin(cabins):
+        """
+        :type cabins: dict
+        """
+        seats_by_cabin = defaultdict(int)
+        for cabin_class_name, cabin_class_values in cabins.items():
+            for sas_cabin_class_values in cabin_class_values.values():
+                products = sas_cabin_class_values['products']
+                for product_value in products.values():
+                    for fare in product_value['fares']:
+                        if fare['avlSeats'] > seats_by_cabin[cabin_class_name]:
+                            seats_by_cabin[cabin_mapper(cabin_class_name)] = fare['avlSeats']
+        return seats_by_cabin
+
+    if json_response is None:
+        return None
+
+    if 'errors' in json_response:
+        return None
+        # TODO: Handle errors, add to Result? Should remove a previous db entry if we now get errors for it
+        # return Result(error=json_response)
+
+    if json_response.get('pricingType', '') == 'O':
+        # Paid flights only?
+        return None
+
+    outbound = json_response.get('outboundFlights', [])
+    for flight_id in outbound.values():
+        if flight_id.get('isSoldOut', False):
+            continue
+
+        if flight_id.get('stops', 1):
+            # Only interested in direct flights
+            continue
+
+        start_date = flight_id['startTimeInLocal'].split('T')[0]
+        out_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+
+        cabins = flight_id['cabins']
+        seats_by_cabin = _seats_by_cabin(cabins)
+
+        result = Result(origin=flight_id['origin']['code'],
+                        destination=flight_id['destination']['code'],
+                        departure_date=out_date,
+                        business_seats=seats_by_cabin[CabinClass.BUSINESS],
+                        plus_seats=seats_by_cabin[CabinClass.PLUS])
+        return result
+
+    return None
+
+
+def from_url_to_result(url):
+    flight_data = from_url_to_json(url)
+    return from_json_to_result(flight_data)
+
+
+def fetch_flights(config):
+    urls = Urls(config)
+    results = []
+    for url in urls:
+        results.append(from_url_to_result(url))
+        sleep(config.seconds + round(random(), 2))
+    return results

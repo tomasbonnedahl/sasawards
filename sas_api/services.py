@@ -1,7 +1,7 @@
 import datetime
 
 from sas_api.config import create_config
-from sas_api.requester_dod import fetch_flights
+from sas_api.requester import fetch_flights
 from sas_api.response_handler import handle_results
 
 
