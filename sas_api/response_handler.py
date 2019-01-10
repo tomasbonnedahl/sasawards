@@ -14,6 +14,8 @@ def diff_from_results_and_existing(results, existing):
     :type existing: list[awards.models.Flight]
     :rtype: dict
     """
+    results = remove_empty_seats(results)
+
     result_key = lambda x: (x.origin, x.destination, x.departure_date)
     result_by_key = {result_key(each): each for each in results}
 
@@ -83,27 +85,21 @@ def save_results(results):
     """
     :type results: list[sas_api.requester.Result]
     """
-    for result in results:
-        save_result(result)
+    [save_result(result) for result in results]
 
 def remove_empty_seats(results):
     """
     :type results: list[sas_api.requester.Result]
     """
-    def empty_seats(result):
-        """
-        :type result: sas_api.requester.Result
-        """
-        return result.business_seats != 0
-    return [result for result in results if not empty_seats(result)]
+    return list(filter(lambda result: result and result.business_seats > 0, results))
 
 
 def handle_results(results):
     """
     :type results: list[sas_api.requester.Result]
     """
-    results = [each for each in results if each is not None]
-    results = remove_empty_seats(results)  # TODO: map/reduce
+    results = [result for result in results if result is not None]
+
     diffs = get_diffs(results)
     save_results(results)
     email_diffs(diffs)
