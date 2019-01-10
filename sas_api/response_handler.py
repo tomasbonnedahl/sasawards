@@ -86,12 +86,24 @@ def save_results(results):
     for result in results:
         save_result(result)
 
+def remove_empty_seats(results):
+    """
+    :type results: list[sas_api.requester.Result]
+    """
+    def empty_seats(result):
+        """
+        :type result: sas_api.requester.Result
+        """
+        return result.business_seats != 0
+    return [result for result in results if not empty_seats(result)]
+
 
 def handle_results(results):
     """
     :type results: list[sas_api.requester.Result]
     """
     results = [each for each in results if each is not None]
+    results = remove_empty_seats(results)  # TODO: map/reduce
     diffs = get_diffs(results)
     save_results(results)
     email_diffs(diffs)
