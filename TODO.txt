@@ -1,9 +1,8 @@
-- Remove replaced code
+- Add e-mail addresses to prod db when everything is working
 - Logger per file/area, instantiate in each file or a get_logger function that returns a logger based on name/area?
-- Convert all tests to pytest (or write new)
-- Pytest runner
+- Add test from old response handler
+- Pytest runner that includes the settings env variable
 - Start using the Conf model instead of having it in code (config.py)
-- Add e-mail addresses to prod db - need access first
 - Add 127.0.0.1 and https://..heroku.com as host addresses in settings.py depending on where it's run
 - Make the fetching job include the config for that job
     - Stops other saved flights to be removed
@@ -16,27 +15,26 @@
     - Each airport code listed in db as name together with type, either origin or destination
     - Also add if active origin/dest and fetch those from db instead of in code (move in conf to db)
 - Filtering like t-hacks, destination and duration on site
-- Use django-factory
+- Use django-factory for tests - can they be used without mark.django_db?
 - Handle the Changes objects - never removed, use for e-mailing?
-- Set alerts on specific destinations
 - Do not add to queue if already processing/starting
-- Implement ideas from data-driven
-- Empty queue on startup/restart?
+- Empty the queue on startup/restart?
 - Set the static start date in conf to be relative to now, e.g. 10 months from now or something
 - Remove errors after a while
     Job that removes them after a week, use ts?
-- Change URL at heroku
+- Change URL at heroku to something else. heroku.com/sasawards?
 - Start one separate job for each (origin, dst)?
     Must run in sequence to not overly use the API - queuing solves that?
     Can lower the timeout for each job
     Can one job post another job?
 - Send e-mails regarding errors separately (separate job?)
     Needs flag in db for e-mail sent? Can be scheduled differently from fetching data
+    Send all exceptions?
 - Send e-mail by queueing it as a job
 - Add more to parsing, do a few calls to API and get as many variants as possible
 - Fix psycopg2-binary, pip install -r req.txt
 - Handle plus seats
-- Do not try ARN-SFO as SAS doesn't have a direct flight, unnessesary calls, set up relations
+- Do not try ARN-SFO as SAS doesn't have a direct flight, unessesary calls, set up relations
     Seems to have more than enough, worth anyways?
 - Add origin, dest, dates to db and have a way to set them from a view (django superuser?)
 - Run tests from PyCharm, works with python manage.py test (test_response_handler doesn't work)
