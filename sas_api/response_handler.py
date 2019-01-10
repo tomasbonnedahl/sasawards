@@ -76,7 +76,7 @@ def save_result(result):
         # will wipe the rest of the data from the database. Flag to the config? Multiple configs at the same time?
         Flight.objects.filter(origin=result.origin,
                               destination=result.destination,
-                              date=result.out_date).delete()
+                              date=result.departure_date).delete()
 
 
 def save_results(results):

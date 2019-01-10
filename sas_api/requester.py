@@ -117,14 +117,14 @@ def from_json_to_result(json_response):
             continue
 
         start_date = flight_id['startTimeInLocal'].split('T')[0]
-        out_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+        departure_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
 
         cabins = flight_id['cabins']
         seats_by_cabin = _seats_by_cabin(cabins)
 
         result = Result(origin=flight_id['origin']['code'],
                         destination=flight_id['destination']['code'],
-                        departure_date=out_date,
+                        departure_date=departure_date,
                         business_seats=seats_by_cabin[CabinClass.BUSINESS],
                         plus_seats=seats_by_cabin[CabinClass.PLUS])
         return result
