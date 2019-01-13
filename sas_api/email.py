@@ -60,15 +60,17 @@ def results_to_email(subject, results):
     results_by_user = match(results, _org_dst_by_user)
 
     for user, filtered_results in results_by_user.items():
-        print('Sending to {}'.format(user.email))
         message = render_to_string('email_template.html', {'results': filtered_results,
                                                            'unsubscribe_url': unsubscribe_url(user)})
         send_email(user.email, subject, message)
+        print('Results e-mailed to {}'.format(user.email))
 
 
 def email_diffs(diffs):
     """
     :type diffs: dict
     """
-    to_be_mailed = compile_diffs(diffs)
-    results_to_email(subject='New seats found', results=to_be_mailed)
+    result_to_mail = compile_diffs(diffs)
+
+    # TODO: Assumes all subscribe to the same (filter here based on user, a dict with user -> [result])
+    results_to_email(subject='New seats found', results=result_to_mail)

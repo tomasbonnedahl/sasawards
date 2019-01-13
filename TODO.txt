@@ -1,6 +1,7 @@
 - Add e-mail addresses to prod db when everything is working
 - Logger per file/area, instantiate in each file or a get_logger function that returns a logger based on name/area?
 - Add test from old response handler
+- Add unique together on subscriptions (mistake to have two identical rows - might result in more e-emails...?)
 - Pytest runner that includes the settings env variable
 - Start using the Conf model instead of having it in code (config.py)
 - Add 127.0.0.1 and https://..heroku.com as host addresses in settings.py depending on where it's run
